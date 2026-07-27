@@ -38,9 +38,6 @@ Currently implemented:
 
 Planned next steps:
 
-* Validate Task 001 against intentionally flawed implementations
-* Run the first LLM-generated baseline
-* Record structured evaluation results
 * Add additional benchmark tasks
 * Add one-shot and test-feedback agent baselines
 * Expand failure-mode analysis
