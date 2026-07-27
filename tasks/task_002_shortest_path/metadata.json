@@ -25,6 +25,12 @@
     "graph_directionality",
     "input_mutation"
   ],
+  "contract_keywords": [
+    "directed",
+    "nonnegative",
+    "math.inf",
+    "Do not mutate"
+  ],
   "expected_agent_failure_modes": [
     "overwrites a shorter distance with a longer distance",
     "returns None for unreachable nodes",

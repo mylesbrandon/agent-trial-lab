@@ -31,6 +31,7 @@ Currently implemented:
 * Verified reference solutions
 * Task metadata and failure-mode labels
 * A task runner for evaluating candidate solutions
+* Benchmark integrity validation with a machine-readable report
 * Task 001: Rolling Z-Score
 * Task 002: Shortest-Path Bug Repair
 * Task 003: Lookahead-Safe Signal Alignment
@@ -217,6 +218,19 @@ python runner/run_benchmark.py \
 ```
 
 See `docs/running_the_benchmark.md` for full instructions.
+
+## Validate the benchmark
+
+Before evaluating candidate solutions, validate all task definitions:
+
+```bash
+python runner/validate_benchmark.py
+```
+
+The validator checks task structure, metadata, test counts, reference
+correctness, starter behavior, test isolation, and prompt contracts. It
+also writes `results/validation/benchmark_validation.json`. See
+`docs/benchmark_validation.md` for the full validation contract.
 
 ## Evaluation Workflow
 

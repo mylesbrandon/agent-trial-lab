@@ -5,9 +5,9 @@ from runner.evaluation import build_missing_result
 
 
 def test_missing_candidate_is_recorded(
-    tmp_path: Path,
+    workspace_tmp_path: Path,
 ):
-    task_path = tmp_path / "task_001_example"
+    task_path = workspace_tmp_path / "task_001_example"
     task_path.mkdir()
 
     metadata = {
@@ -22,7 +22,9 @@ def test_missing_candidate_is_recorded(
         encoding="utf-8",
     )
 
-    candidate_path = tmp_path / "solutions" / "task_001.py"
+    candidate_path = (
+        workspace_tmp_path / "solutions" / "task_001.py"
+    )
 
     result = build_missing_result(
         task_path=task_path,

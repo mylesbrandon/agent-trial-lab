@@ -1,0 +1,45 @@
+{
+  "benchmark_valid": true,
+  "task_count": 3,
+  "error_count": 0,
+  "warning_count": 0,
+  "global_errors": [],
+  "tasks": [
+    {
+      "task_id": "task_001",
+      "task_folder": "task_001_rolling_zscore",
+      "valid": true,
+      "errors": [],
+      "warnings": [],
+      "public_test_count": 3,
+      "hidden_test_count": 8,
+      "reference_public_passed": true,
+      "reference_hidden_passed": true,
+      "starter_overall_passed": false
+    },
+    {
+      "task_id": "task_002",
+      "task_folder": "task_002_shortest_path",
+      "valid": true,
+      "errors": [],
+      "warnings": [],
+      "public_test_count": 5,
+      "hidden_test_count": 8,
+      "reference_public_passed": true,
+      "reference_hidden_passed": true,
+      "starter_overall_passed": false
+    },
+    {
+      "task_id": "task_003",
+      "task_folder": "task_003_signal_alignment",
+      "valid": true,
+      "errors": [],
+      "warnings": [],
+      "public_test_count": 6,
+      "hidden_test_count": 10,
+      "reference_public_passed": true,
+      "reference_hidden_passed": true,
+      "starter_overall_passed": false
+    }
+  ]
+}

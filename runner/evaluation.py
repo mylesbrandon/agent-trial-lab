@@ -6,17 +6,40 @@ import re
 import shutil
 import subprocess
 import sys
-import tempfile
 from collections import defaultdict
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 
 FAILED_TEST_PATTERN = re.compile(
     r"^FAILED\s+.+?::([^\s]+)",
     re.MULTILINE,
 )
+
+
+@contextmanager
+def workspace_temporary_directory(
+    parent: Path,
+    prefix: str,
+):
+    """
+    Create an inherited-permission temporary directory.
+
+    Python 3.14's Windows tempfile permissions can conflict with a
+    sandbox ACL, so benchmark copies use an explicit workspace child.
+    """
+    temporary_path = (
+        parent.resolve() / f"{prefix}{uuid4().hex}"
+    )
+    temporary_path.mkdir(parents=True, exist_ok=False)
+
+    try:
+        yield temporary_path
+    finally:
+        shutil.rmtree(temporary_path)
 
 
 def slugify(value: str) -> str:
@@ -83,6 +106,8 @@ def run_pytest(test_file: Path, working_directory: Path) -> dict[str, Any]:
             "-m",
             "pytest",
             "-q",
+            "-p",
+            "no:cacheprovider",
             test_file.name,
         ],
         cwd=working_directory,
@@ -152,8 +177,11 @@ def evaluate_candidate(
     run_directory = results_root / "runs" / task_id / run_id
     run_directory.mkdir(parents=True, exist_ok=False)
 
-    with tempfile.TemporaryDirectory() as temporary_directory:
-        temporary_task = Path(temporary_directory) / task_path.name
+    with workspace_temporary_directory(
+        results_root,
+        ".eval_",
+    ) as temporary_directory:
+        temporary_task = temporary_directory / task_path.name
 
         shutil.copytree(task_path, temporary_task)
         shutil.copy2(

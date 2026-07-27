@@ -23,6 +23,12 @@
     "incorrect_short_position_handling",
     "invalid_price_handling"
   ],
+  "contract_keywords": [
+    "signals[t - 1]",
+    "transaction cost",
+    "positive",
+    "equal length"
+  ],
   "expected_agent_failure_modes": [
     "multiplies a realized return by the current signal",
     "charges transaction cost at the signal timestamp",

@@ -21,6 +21,12 @@
     "incorrect_window_selection",
     "sample_std_instead_of_population_std"
   ],
+  "contract_keywords": [
+    "population standard deviation",
+    "NaN",
+    "window",
+    "ValueError"
+  ],
   "expected_agent_failure_modes": [
     "forgets to handle zero standard deviation",
     "uses full history instead of rolling window",

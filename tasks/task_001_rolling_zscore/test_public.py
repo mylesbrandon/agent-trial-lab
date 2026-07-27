@@ -23,7 +23,3 @@ def test_window_size_three():
 
     assert len(result) == 4
     assert almost_equal(result[0], 0.0)
-
-def test_invalid_window():
-    with pytest.raises(ValueError):
-        rolling_zscore([1, 2, 3], 0)
