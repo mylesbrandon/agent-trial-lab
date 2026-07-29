@@ -4,9 +4,9 @@ CodeAgentBench is a small, reproducible benchmark for evaluating how reliably LL
 
 The project focuses on more than whether generated code looks plausible. Each task is graded through executable tests, including hidden cases designed to expose shallow implementations, missed edge cases, and specification misunderstandings.
 
-The benchmark currently contains three execution-graded Python tasks
-across numerical robustness, algorithmic debugging, and time-series
-correctness.
+The benchmark currently contains four execution-graded Python tasks
+across numerical robustness, algorithmic debugging, time-series
+correctness, and data-parsing robustness.
 
 ## Project Goals
 
@@ -35,6 +35,7 @@ Currently implemented:
 * Task 001: Rolling Z-Score
 * Task 002: Shortest-Path Bug Repair
 * Task 003: Lookahead-Safe Signal Alignment
+* Task 004: Robust Market CSV Parsing
 * Initial benchmark-design and failure-analysis documentation
 
 Planned next steps:
@@ -114,6 +115,7 @@ Structured information about the task, including:
 | `task_001_rolling_zscore` | Numerical robustness | Rolling windows, NaNs, zero variance, population standard deviation |
 | `task_002_shortest_path` | Algorithmic debugging | Dijkstra repair, edge relaxation, graph edge cases, path reconstruction |
 | `task_003_signal_alignment` | Time-series correctness | Return alignment, lookahead-bias prevention, turnover-based transaction costs |
+| `task_004_market_csv` | Data-parsing robustness | CSV quoting, normalization, numeric conversion, missing values, malformed-row validation |
 
 ## Task 001: Rolling Z-Score
 
@@ -143,6 +145,17 @@ from `t - 1` to `t`, so the aligned calculation uses
 The task also checks proportional transaction costs, turnover timing,
 long and short positions, flat prices, invalid prices, and boundary
 behavior.
+
+## Task 004: Robust Market CSV Parsing
+
+Task 004 asks an agent to repair a market-data CSV parser. It checks
+whether the implementation uses Python's CSV parser instead of
+splitting records on commas, which corrupts quoted values such as
+`"earnings, after close"`.
+
+The task also checks fixed-header validation, whitespace and symbol
+normalization, numeric conversion, missing numeric values, blank rows,
+and malformed row rejection.
 
 ## Installation
 
@@ -343,7 +356,8 @@ Do not run arbitrary untrusted code using the current runner.
 * [ ] Record public and hidden test results
 * [ ] Create a structured results format
 * [ ] Write the first detailed failure analyses
-* [ ] Add Tasks 004–005
+* [x] Add Task 004
+* [ ] Add Task 005
 
 ### Phase 3: Benchmark Expansion
 

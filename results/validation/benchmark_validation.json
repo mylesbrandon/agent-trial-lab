@@ -1,6 +1,6 @@
 {
   "benchmark_valid": true,
-  "task_count": 3,
+  "task_count": 4,
   "error_count": 0,
   "warning_count": 0,
   "global_errors": [],
@@ -36,6 +36,18 @@
       "errors": [],
       "warnings": [],
       "public_test_count": 6,
+      "hidden_test_count": 10,
+      "reference_public_passed": true,
+      "reference_hidden_passed": true,
+      "starter_overall_passed": false
+    },
+    {
+      "task_id": "task_004",
+      "task_folder": "task_004_market_csv",
+      "valid": true,
+      "errors": [],
+      "warnings": [],
+      "public_test_count": 4,
       "hidden_test_count": 10,
       "reference_public_passed": true,
       "reference_hidden_passed": true,

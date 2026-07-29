@@ -1,12 +1,12 @@
 {
   "model": "reference",
   "condition": "validation",
-  "task_count": 3,
-  "attempted_count": 3,
+  "task_count": 4,
+  "attempted_count": 4,
   "missing_count": 0,
-  "public_pass_count": 3,
-  "hidden_pass_count": 3,
-  "overall_pass_count": 3,
+  "public_pass_count": 4,
+  "hidden_pass_count": 4,
+  "overall_pass_count": 4,
   "public_pass_rate": 1.0,
   "hidden_pass_rate": 1.0,
   "overall_pass_rate": 1.0,
@@ -23,6 +23,11 @@
       "passed": 1
     },
     "time_series_correctness": {
+      "tasks": 1,
+      "attempted": 1,
+      "passed": 1
+    },
+    "data_parsing_robustness": {
       "tasks": 1,
       "attempted": 1,
       "passed": 1

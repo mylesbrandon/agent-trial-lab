@@ -1,0 +1,42 @@
+{
+  "task_id": "task_004",
+  "name": "market_csv",
+  "task_type": "bug_repair",
+  "category": "data_parsing_robustness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "csv_parsing",
+    "data_cleaning",
+    "type_conversion",
+    "missing_values",
+    "input_validation",
+    "quoted_fields"
+  ],
+  "public_tests": 4,
+  "hidden_tests": 10,
+  "failure_modes_targeted": [
+    "naive_delimiter_splitting",
+    "quoted_comma_failure",
+    "missing_value_failure",
+    "missing_type_conversion",
+    "incorrect_whitespace_handling",
+    "weak_header_validation",
+    "malformed_row_acceptance"
+  ],
+  "contract_keywords": [
+    "quoted",
+    "None",
+    "uppercase",
+    "ValueError",
+    "blank rows"
+  ],
+  "expected_agent_failure_modes": [
+    "splits each line on commas instead of using a CSV parser",
+    "returns numeric fields as strings",
+    "fails to normalize symbols",
+    "raises on empty numeric fields instead of returning None",
+    "silently truncates malformed rows through dict and zip",
+    "accepts missing, additional, or reordered headers"
+  ]
+}
