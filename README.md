@@ -31,6 +31,7 @@ Currently implemented:
 * Verified reference solutions
 * Task metadata and failure-mode labels
 * A task runner for evaluating candidate solutions
+* Provider-agnostic one-shot candidate generation
 * Benchmark integrity validation with a machine-readable report
 * Task 001: Rolling Z-Score
 * Task 002: Shortest-Path Bug Repair
@@ -41,7 +42,7 @@ Currently implemented:
 Planned next steps:
 
 * Add additional benchmark tasks
-* Add one-shot and test-feedback agent baselines
+* Add real API and test-feedback agent adapters
 * Expand failure-mode analysis
 * Add safer execution isolation for generated code
 
@@ -192,6 +193,39 @@ python -m pip install -r requirements.txt
 
 The current project requires Python and `pytest`.
 
+## Generate One-Shot Candidates
+
+Candidate generation is separate from evaluation. An agent receives
+only the task specification, starter code, and public tests. The
+generation pipeline preserves the exact prompt and raw response before
+extracting a clean Python candidate.
+
+Generate one task with the manual adapter:
+
+```bash
+python runner/generate_candidates.py \
+  --agent manual \
+  --model model_001 \
+  --condition one_shot \
+  --tasks task_001
+```
+
+Generate every task with deterministic mock responses:
+
+```bash
+python runner/generate_candidates.py \
+  --agent mock \
+  --model mock-agent \
+  --condition one_shot \
+  --tasks all \
+  --mock-solutions path/to/mock_solutions
+```
+
+Generation evidence is saved under `results/generations/`. Clean
+solution sets are saved under `results/candidates/generated/`. See
+`docs/agent_generation.md` for the information-isolation contract,
+artifact layout, parsing rules, and adapter interface.
+
 ## Running a Task
 
 Run Task 001 against the verified reference solution:
@@ -222,6 +256,17 @@ Overall: PASS
 ```
 
 ## Run the full benchmark
+
+Evaluate a generated one-shot solution set:
+
+```bash
+python runner/run_benchmark.py \
+  --solution-set results/candidates/generated/model_001/one_shot \
+  --model model_001 \
+  --condition one_shot
+```
+
+Or run the verified reference solution set:
 
 ```bash
 python runner/run_benchmark.py \
@@ -352,6 +397,7 @@ Do not run arbitrary untrusted code using the current runner.
 
 ### Phase 2: Initial Evaluation
 
+* [x] Add reproducible one-shot candidate generation
 * [ ] Run a one-shot LLM baseline
 * [ ] Record public and hidden test results
 * [ ] Create a structured results format
