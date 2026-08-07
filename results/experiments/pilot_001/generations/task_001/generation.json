@@ -1,0 +1,21 @@
+{
+  "task_id": "task_001",
+  "provider": "chatgpt_manual",
+  "model": "GPT-5.6 Sol",
+  "condition": "one_shot",
+  "prompt_sha256": "7c3199de3b13359f2d0cf42750875cc7c2ae5475fffa2459df7f03e5aeb37f34",
+  "prompt_file": "request.md",
+  "parse_status": "failed",
+  "generation_status": "completed",
+  "generation_method": "manual_copy_paste",
+  "regenerated": false,
+  "experiment_id": "pilot_001",
+  "raw_response_file": "raw_response.txt",
+  "raw_response_sha256": "0ac11c6009735c146ca4940c80cb1c4f52d5b42d52d3c714db5cc9c3297d4fde",
+  "response_id": null,
+  "request_id": null,
+  "usage": null,
+  "candidate_file": "extracted_solution.py",
+  "candidate_sha256": "0b0588073a4bf63e334e8e6d890b18fa2db074f2e2a6ca6f9da5863076f47e07",
+  "error": "Extracted candidate is not valid Python: unterminated triple-quoted string literal (detected at line 44) (<candidate>, line 17)"
+}

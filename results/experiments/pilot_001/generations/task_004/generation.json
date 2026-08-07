@@ -1,0 +1,21 @@
+{
+  "task_id": "task_004",
+  "provider": "chatgpt_manual",
+  "model": "GPT-5.6 Sol",
+  "condition": "one_shot",
+  "prompt_sha256": "bb944312f6a14493267ad7e5c10540c979913ea7ebf2823ab8b0d38d38882279",
+  "prompt_file": "request.md",
+  "parse_status": "failed",
+  "generation_status": "completed",
+  "generation_method": "manual_copy_paste",
+  "regenerated": false,
+  "experiment_id": "pilot_001",
+  "raw_response_file": "raw_response.txt",
+  "raw_response_sha256": "e3e1f392780874b4229ac5a0151412f4d0f65157dd9f070b3aceb723b66465da",
+  "response_id": null,
+  "request_id": null,
+  "usage": null,
+  "candidate_file": "extracted_solution.py",
+  "candidate_sha256": "b9a69a67d0b37a27daead689fff5445652f48cbc7fa090a245dbb6f52d8d9495",
+  "error": "Extracted candidate is not valid Python: 'return' outside function (<candidate>, line 34)"
+}

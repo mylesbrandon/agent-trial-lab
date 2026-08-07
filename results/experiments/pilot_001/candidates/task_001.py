@@ -1,0 +1,44 @@
+yaml
+Args:
+    values: list of numbers, possibly including float("nan")
+    window: positive integer window size
+
+Returns:
+    list of floats
+
+Rules:
+    - Raise ValueError if window <= 0.
+    - For each index i, use values[max(0, i - window + 1): i + 1].
+    - Ignore NaN values when computing the window mean and standard deviation.
+    - If the current value is NaN, return NaN for that position.
+    - If there are no valid non-NaN values in the window, return NaN for that position.
+    - Use population standard deviation, dividing variance by n, not n - 1.
+    - If the window standard deviation is 0, return 0.0 for that position.
+"""
+if not isinstance(window, int) or isinstance(window, bool) or window <= 0:
+    raise ValueError("window must be a positive integer")
+
+result = []
+
+for i, current in enumerate(values):
+    if math.isnan(current):
+        result.append(float("nan"))
+        continue
+
+    start = max(0, i - window + 1)
+    valid = [value for value in values[start:i + 1] if not math.isnan(value)]
+
+    if not valid:
+        result.append(float("nan"))
+        continue
+
+    mean = sum(valid) / len(valid)
+    variance = sum((value - mean) ** 2 for value in valid) / len(valid)
+    std_dev = math.sqrt(variance)
+
+    if std_dev == 0:
+        result.append(0.0)
+    else:
+        result.append((current - mean) / std_dev)
+
+return result

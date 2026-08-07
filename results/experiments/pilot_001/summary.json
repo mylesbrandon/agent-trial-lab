@@ -1,0 +1,42 @@
+{
+  "model": "GPT-5.6 Sol",
+  "condition": "one_shot",
+  "task_count": 4,
+  "attempted_count": 4,
+  "missing_count": 0,
+  "public_pass_count": 0,
+  "hidden_pass_count": 0,
+  "overall_pass_count": 0,
+  "public_pass_rate": 0.0,
+  "hidden_pass_rate": 0.0,
+  "overall_pass_rate": 0.0,
+  "public_hidden_gap": 0.0,
+  "category_results": {
+    "numerical_robustness": {
+      "tasks": 1,
+      "attempted": 1,
+      "passed": 0
+    },
+    "algorithmic_debugging": {
+      "tasks": 1,
+      "attempted": 1,
+      "passed": 0
+    },
+    "time_series_correctness": {
+      "tasks": 1,
+      "attempted": 1,
+      "passed": 0
+    },
+    "data_parsing_robustness": {
+      "tasks": 1,
+      "attempted": 1,
+      "passed": 0
+    }
+  },
+  "experiment_id": "pilot_001",
+  "provider": "chatgpt_manual",
+  "syntax_valid_response_count": 0,
+  "syntax_valid_response_rate": 0.0,
+  "parse_failure_count": 4,
+  "regeneration_count": 0
+}

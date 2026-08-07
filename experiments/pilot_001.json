@@ -1,0 +1,18 @@
+{
+  "experiment_id": "pilot_001",
+  "description": "First one-shot pilot across Tasks 001-004 using manual ChatGPT generation",
+  "provider": "chatgpt_manual",
+  "model": "GPT-5.6 Sol",
+  "condition": "one_shot",
+  "prompt_builder": "one_shot_v1",
+  "task_ids": [
+    "task_001",
+    "task_002",
+    "task_003",
+    "task_004"
+  ],
+  "repetitions": 1,
+  "hidden_tests_available_during_generation": false,
+  "reference_solutions_available_during_generation": false,
+  "regeneration_policy": "No regeneration after a valid response"
+}

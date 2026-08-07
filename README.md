@@ -226,6 +226,18 @@ solution sets are saved under `results/candidates/generated/`. See
 `docs/agent_generation.md` for the information-isolation contract,
 artifact layout, parsing rules, and adapter interface.
 
+### Pilot 001
+
+Pilot 001 is frozen in `experiments/pilot_001.json`, with complete
+generation and evaluation evidence under
+`results/experiments/pilot_001/`.
+
+* Model: GPT-5.6 Sol via ChatGPT manual copy/paste
+* Condition: one-shot across Tasks 001-004
+* Tasks attempted: 4/4
+* Public, hidden, and overall pass rates: 0.0%
+* Regenerations after a valid response: 0
+
 ## Running a Task
 
 Run Task 001 against the verified reference solution:

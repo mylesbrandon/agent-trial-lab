@@ -1,0 +1,21 @@
+{
+  "run_id": "20260807T231635253047Z_task_004_gpt-5_6_sol_one_shot",
+  "task_id": "task_004",
+  "task_name": "market_csv",
+  "category": "data_parsing_robustness",
+  "difficulty": "medium",
+  "model": "GPT-5.6 Sol",
+  "condition": "one_shot",
+  "status": "attempted",
+  "candidate_path": "C:\\Users\\myles\\OneDrive\\Documents\\codeagentbench-lite\\results\\experiments\\pilot_001\\candidates\\task_004.py",
+  "public_passed": false,
+  "hidden_passed": false,
+  "overall_passed": false,
+  "failed_public_tests": [],
+  "failed_hidden_tests": [],
+  "public_returncode": 2,
+  "hidden_returncode": 2,
+  "timestamp": "2026-08-07T23:16:36.844085+00:00",
+  "run_path": "C:\\Users\\myles\\OneDrive\\Documents\\codeagentbench-lite\\results\\experiments\\pilot_001\\evaluation\\task_004",
+  "failure_classification": "public_and_hidden_test_failure"
+}
