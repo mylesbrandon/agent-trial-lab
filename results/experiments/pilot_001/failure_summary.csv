@@ -1,0 +1,5 @@
+task_id,task_name,category,public_passed,hidden_passed,overall_passed,primary_failure,secondary_failures,failed_test_count,confidence,task_action
+task_001,rolling_zscore,numerical_robustness,false,false,false,syntax_error,incomplete_solution,0,high,keep
+task_002,shortest_path,algorithmic_debugging,false,false,false,syntax_error,incomplete_solution,0,high,keep
+task_003,signal_alignment,time_series_correctness,false,false,false,syntax_error,incomplete_solution,0,high,keep
+task_004,market_csv,data_parsing_robustness,false,false,false,syntax_error,incomplete_solution,0,high,keep

@@ -1,0 +1,45 @@
+{
+  "experiment_id": "pilot_001",
+  "classifications": [
+    {
+      "task_id": "task_001",
+      "overall_passed": false,
+      "primary_failure": "syntax_error",
+      "secondary_failures": ["incomplete_solution"],
+      "failed_tests": [],
+      "evidence": "candidates/task_001.py:17 opens an unterminated triple-quoted string (detected at line 44); the extracted fragment starts with yaml and lacks def rolling_zscore and import math. evaluation/task_001/public_test_output.txt and evaluation/task_001/hidden_test_output.txt report the same SyntaxError during collection (exit code 2 in result.json), before any test function ran. generations/task_001/generation.json records the matching parse failure. The raw_response.txt also has an unindented docstring after its function header, so extraction did not turn a valid captured module into this failure.",
+      "confidence": "high",
+      "task_action": "keep"
+    },
+    {
+      "task_id": "task_002",
+      "overall_passed": false,
+      "primary_failure": "syntax_error",
+      "secondary_failures": ["incomplete_solution"],
+      "failed_tests": [],
+      "evidence": "candidates/task_002.py:3 contains return 0, [start] outside any function; the extracted fragment starts with lua and lacks def shortest_path and the heapq/math imports. evaluation/task_002/public_test_output.txt and evaluation/task_002/hidden_test_output.txt report SyntaxError: 'return' outside function during collection (exit code 2 in result.json), before any test function ran. generations/task_002/generation.json records the matching parse failure. The raw_response.txt independently has an unindented docstring after its function header.",
+      "confidence": "high",
+      "task_action": "keep"
+    },
+    {
+      "task_id": "task_003",
+      "overall_passed": false,
+      "primary_failure": "syntax_error",
+      "secondary_failures": ["incomplete_solution"],
+      "failed_tests": [],
+      "evidence": "candidates/task_003.py:16 contains return [] outside any function; the extracted fragment lacks def strategy_returns and the Real import. evaluation/task_003/public_test_output.txt and evaluation/task_003/hidden_test_output.txt report SyntaxError: 'return' outside function during collection (exit code 2 in result.json), before any test function ran. generations/task_003/generation.json records the matching parse failure. The raw_response.txt independently has an unindented docstring after its function header; the visible lag/turnover formulas were never evaluated.",
+      "confidence": "high",
+      "task_action": "keep"
+    },
+    {
+      "task_id": "task_004",
+      "overall_passed": false,
+      "primary_failure": "syntax_error",
+      "secondary_failures": ["incomplete_solution"],
+      "failed_tests": [],
+      "evidence": "candidates/task_004.py:34 contains return records outside any function; the extracted fragment lacks def parse_market_csv, the csv/io imports, and empty-input handling. evaluation/task_004/public_test_output.txt and evaluation/task_004/hidden_test_output.txt report SyntaxError: 'return' outside function during collection (exit code 2 in result.json), before any test function ran. generations/task_004/generation.json records the matching parse failure. The raw_response.txt independently has an unindented docstring after its function header.",
+      "confidence": "high",
+      "task_action": "keep"
+    }
+  ]
+}
