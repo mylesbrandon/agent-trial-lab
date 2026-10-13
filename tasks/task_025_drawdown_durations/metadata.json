@@ -1,0 +1,28 @@
+{
+  "task_id": "task_025",
+  "name": "drawdown_durations",
+  "task_type": "function_implementation",
+  "category": "time_series_correctness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "drawdown_duration",
+    "high_water_mark",
+    "recovery",
+    "elapsed_time"
+  ],
+  "public_tests": 4,
+  "hidden_tests": 8,
+  "failure_modes_targeted": [
+    "equal_peak_does_not_recover",
+    "local_high_resets_clock",
+    "row_count_duration",
+    "approximate_peak_equality"
+  ],
+  "contract_keywords": [
+    "Equal peaks do reset",
+    "elapsed time",
+    "strictly increasing",
+    "exact numeric comparison"
+  ]
+}

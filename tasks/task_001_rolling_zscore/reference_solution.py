@@ -1,8 +1,8 @@
 import math
 def rolling_zscore(values, window):
     if window <=0:
-        raise ValueError("window must be positive") 
-    
+        raise ValueError("window must be positive")
+
     result = []
 
     for i, current in enumerate(values):
@@ -30,7 +30,7 @@ def rolling_zscore(values, window):
 
         if std == 0:
             result.append(0.0)
-        else: 
+        else:
             z = (current - mean) / std
             result.append(z)
     return result

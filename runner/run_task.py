@@ -4,9 +4,9 @@ import argparse
 from pathlib import Path
 
 if __package__:
-    from .evaluation import evaluate_candidate
+    from .evaluation import DEFAULT_TIMEOUT_SECONDS, evaluate_candidate, positive_timeout
 else:
-    from evaluation import evaluate_candidate
+    from evaluation import DEFAULT_TIMEOUT_SECONDS, evaluate_candidate, positive_timeout
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -47,6 +47,10 @@ def parse_arguments() -> argparse.Namespace:
         help="Directory where run artifacts are stored.",
     )
 
+    parser.add_argument(
+        "--timeout-seconds", type=positive_timeout, default=DEFAULT_TIMEOUT_SECONDS,
+        help="Maximum seconds per public or hidden suite (default: 10).",
+    )
     return parser.parse_args()
 
 
@@ -59,6 +63,7 @@ def main() -> None:
         model=args.model,
         condition=args.condition,
         results_root=args.results_root,
+        timeout_seconds=args.timeout_seconds,
     )
 
     print(f"Task: {result['task_id']} — {result['task_name']}")

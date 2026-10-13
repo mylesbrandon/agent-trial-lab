@@ -1,0 +1,28 @@
+{
+  "task_id": "task_017",
+  "name": "distance_layers",
+  "title": "Multi-Source Directed Distance Layers",
+  "task_type": "bug_repair",
+  "category": "algorithmic_debugging",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "directed_graphs",
+    "multi_source_bfs",
+    "minimum_hop_distance",
+    "stable_layer_output"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 8,
+  "failure_modes_targeted": [
+    "single_source_only",
+    "wrong_graph_direction",
+    "duplicate_frontier_nodes",
+    "depth_first_distance"
+  ],
+  "contract_keywords": [
+    "Do not mutate",
+    "ValueError",
+    "duplicate"
+  ]
+}

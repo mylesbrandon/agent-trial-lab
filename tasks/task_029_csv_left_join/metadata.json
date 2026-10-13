@@ -1,0 +1,24 @@
+{
+  "task_id": "task_029",
+  "name": "csv_left_join",
+  "task_type": "implementation",
+  "category": "data_parsing_robustness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "join_cardinality",
+    "missing_values",
+    "key_validation"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 7,
+  "failure_modes_targeted": [
+    "silently_overwrites_duplicate_right_ids"
+  ],
+  "contract_keywords": [
+    "unique",
+    "None",
+    "ValueError"
+  ],
+  "authorship": "AI-assisted task design, reference, and tests; independent human review pending"
+}

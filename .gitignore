@@ -5,3 +5,6 @@ __pycache__/
 .DS_Store
 .env
 results/raw_runs/
+work/
+.eval_*/
+.pytest_workspace_*/

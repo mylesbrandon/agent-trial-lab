@@ -1,11 +1,19 @@
 from __future__ import annotations
 
 import csv
+import hashlib
+import importlib.metadata
 import json
+import math
+import os
+import platform
 import re
 import shutil
+import signal
 import subprocess
 import sys
+import time
+import xml.etree.ElementTree as ET
 from collections import defaultdict
 from contextlib import contextmanager
 from datetime import datetime, timezone
@@ -18,6 +26,7 @@ FAILED_TEST_PATTERN = re.compile(
     r"^FAILED\s+.+?::([^\s]+)",
     re.MULTILINE,
 )
+DEFAULT_TIMEOUT_SECONDS = 10.0
 
 
 @contextmanager
@@ -99,35 +108,143 @@ def extract_failed_tests(output: str) -> list[str]:
     return FAILED_TEST_PATTERN.findall(output)
 
 
-def run_pytest(test_file: Path, working_directory: Path) -> dict[str, Any]:
-    completed = subprocess.run(
+def positive_timeout(value: str | float) -> float:
+    """Reject unbounded, zero, or negative execution deadlines."""
+    timeout = float(value)
+    if not math.isfinite(timeout) or timeout <= 0:
+        raise ValueError("timeout must be a finite positive number")
+    return timeout
+
+
+def run_pytest(
+    test_file: Path,
+    working_directory: Path,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
+    """Run a suite with a deadline and require evidence of executed tests.
+
+    These controls make trusted-code evaluation repeatable. They are not a
+    security sandbox: candidate code still has the current user's privileges.
+    """
+    timeout_seconds = positive_timeout(timeout_seconds)
+    working_directory = working_directory.resolve()
+    report_path = working_directory / f".pytest_report_{uuid4().hex}.xml"
+    environment = {
+        key: value for key, value in os.environ.items()
+        if not key.startswith("PYTEST_")
+    }
+    environment["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
+    started = time.monotonic()
+    timed_out = False
+    with subprocess.Popen(
         [
-            sys.executable,
-            "-m",
-            "pytest",
-            "-q",
-            "-p",
-            "no:cacheprovider",
-            test_file.name,
+            sys.executable, "-I", "-B", "-m", "pytest", "-q",
+            "-p", "no:cacheprovider", "-c", os.devnull,
+            f"--confcutdir={working_directory}",
+            f"--junitxml={report_path}", test_file.name,
         ],
         cwd=working_directory,
-        capture_output=True,
+        env=environment,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
         text=True,
-        check=False,
+        encoding="utf-8",
+        errors="replace",
+        start_new_session=os.name == "posix",
+    ) as process:
+        try:
+            stdout, stderr = process.communicate(timeout=timeout_seconds)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            if os.name == "posix":
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+            else:
+                process.kill()
+            stdout, stderr = process.communicate()
+        returncode = process.returncode
+
+    combined_output = stdout
+    if stderr:
+        combined_output += "\n--- STDERR ---\n"
+        combined_output += stderr
+
+    counts = {"tests": 0, "failures": 0, "errors": 0, "skipped": 0}
+    failed_tests: list[str] = []
+    junit_xml = None
+    diagnostic = None
+    try:
+        junit_xml = report_path.read_text(encoding="utf-8")
+        report = ET.fromstring(junit_xml)
+        if report.tag not in {"testsuites", "testsuite"}:
+            raise ValueError("unexpected JUnit report root")
+        cases = report.findall(".//testcase")
+        counts["tests"] = len(cases)
+        for case in cases:
+            for kind, field in (
+                ("failure", "failures"), ("error", "errors"),
+                ("skipped", "skipped"),
+            ):
+                if case.find(kind) is not None:
+                    counts[field] += 1
+            if case.find("failure") is not None or case.find("error") is not None:
+                failed_tests.append(case.get("name", "unknown"))
+        if not cases:
+            diagnostic = "No tests were recorded in the JUnit report."
+    except (OSError, UnicodeError, ET.ParseError, ValueError) as error:
+        diagnostic = f"Missing or invalid JUnit report: {error}"
+    finally:
+        report_path.unlink(missing_ok=True)
+
+    if timed_out:
+        diagnostic = f"Test suite exceeded {timeout_seconds:g} seconds."
+        combined_output += f"\n--- TIMEOUT ---\n{diagnostic}\n"
+
+    passed = (
+        not timed_out and returncode == 0 and diagnostic is None
+        and counts["tests"] > 0
+        and not any(counts[field] for field in ("failures", "errors", "skipped"))
+    )
+    status = (
+        "timeout" if timed_out else "passed" if passed
+        else "error" if diagnostic or counts["errors"] or returncode not in (0, 1)
+        else "failed"
     )
 
-    combined_output = completed.stdout
-
-    if completed.stderr:
-        combined_output += "\n--- STDERR ---\n"
-        combined_output += completed.stderr
-
     return {
-        "passed": completed.returncode == 0,
-        "returncode": completed.returncode,
+        "passed": passed,
+        "status": status,
+        "returncode": returncode,
+        "duration_seconds": time.monotonic() - started,
+        **counts,
+        "diagnostic": diagnostic,
         "output": combined_output,
-        "failed_tests": extract_failed_tests(combined_output),
+        "failed_tests": failed_tests or extract_failed_tests(combined_output),
+        "junit_xml": junit_xml,
     }
+
+
+def run_solution_suites(
+    task_path: Path,
+    candidate_source: bytes,
+    temporary_parent: Path,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Use independent suite copies containing only candidate and test code."""
+    suites = {
+        suite: (task_path / f"test_{suite}.py").read_bytes()
+        for suite in ("public", "hidden")
+    }
+    results = []
+    for suite, test_source in suites.items():
+        with workspace_temporary_directory(temporary_parent, ".eval_") as temporary:
+            (temporary / "starter.py").write_bytes(candidate_source)
+            test_file = temporary / f"test_{suite}.py"
+            test_file.write_bytes(test_source)
+            results.append(run_pytest(test_file, temporary, timeout_seconds))
+    return results[0], results[1]
 
 
 def create_run_id(
@@ -155,15 +272,17 @@ def evaluate_candidate(
     model: str,
     condition: str,
     results_root: Path,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
     """
     Evaluate one candidate without modifying the original task.
 
-    The candidate replaces starter.py only inside a temporary copy.
+    The exact candidate and grading files are saved before execution.
     """
     task_path = task_path.resolve()
     solution_path = solution_path.resolve()
     results_root = results_root.resolve()
+    timeout_seconds = positive_timeout(timeout_seconds)
 
     if not solution_path.exists():
         raise FileNotFoundError(
@@ -172,32 +291,33 @@ def evaluate_candidate(
 
     metadata = load_metadata(task_path)
     task_id = metadata["task_id"]
+    candidate_source = solution_path.read_bytes()
+    task_sources = {
+        filename: (task_path / filename).read_bytes()
+        for filename in (
+            "metadata.json", "test_public.py", "test_hidden.py",
+            "prompt.md", "starter.py",
+        )
+        if (task_path / filename).is_file()
+    }
+    for filename in ("test_public.py", "test_hidden.py"):
+        if filename not in task_sources:
+            raise FileNotFoundError(f"Missing required test file: {task_path / filename}")
 
     run_id = create_run_id(task_id, model, condition)
     run_directory = results_root / "runs" / task_id / run_id
     run_directory.mkdir(parents=True, exist_ok=False)
+    (run_directory / "candidate_snapshot.py").write_bytes(candidate_source)
+    task_snapshot = run_directory / "task_snapshot"
+    task_snapshot.mkdir()
+    for filename, source in task_sources.items():
+        (task_snapshot / filename).write_bytes(source)
+    if "prompt.md" in task_sources:
+        (run_directory / "prompt.md").write_bytes(task_sources["prompt.md"])
 
-    with workspace_temporary_directory(
-        results_root,
-        ".eval_",
-    ) as temporary_directory:
-        temporary_task = temporary_directory / task_path.name
-
-        shutil.copytree(task_path, temporary_task)
-        shutil.copy2(
-            solution_path,
-            temporary_task / "starter.py",
-        )
-
-        public_result = run_pytest(
-            temporary_task / "test_public.py",
-            temporary_task,
-        )
-
-        hidden_result = run_pytest(
-            temporary_task / "test_hidden.py",
-            temporary_task,
-        )
+    public_result, hidden_result = run_solution_suites(
+        task_snapshot, candidate_source, results_root, timeout_seconds,
+    )
 
     public_passed = public_result["passed"]
     hidden_passed = hidden_result["passed"]
@@ -212,6 +332,26 @@ def evaluate_candidate(
         "condition": condition,
         "status": "attempted",
         "candidate_path": str(solution_path),
+        "candidate_sha256": hashlib.sha256(candidate_source).hexdigest(),
+        "task_file_sha256": {
+            filename: hashlib.sha256(source).hexdigest()
+            for filename, source in task_sources.items()
+        },
+        "runtime": {
+            "python": sys.version,
+            "executable": sys.executable,
+            "platform": platform.platform(),
+            "pytest": importlib.metadata.version("pytest"),
+        },
+        "timeout_seconds": timeout_seconds,
+        "public_execution": {
+            key: value for key, value in public_result.items()
+            if key not in {"output", "junit_xml"}
+        },
+        "hidden_execution": {
+            key: value for key, value in hidden_result.items()
+            if key not in {"output", "junit_xml"}
+        },
         "public_passed": public_passed,
         "hidden_passed": hidden_passed,
         "overall_passed": public_passed and hidden_passed,
@@ -223,19 +363,6 @@ def evaluate_candidate(
         "run_path": str(run_directory),
     }
 
-    shutil.copy2(
-        solution_path,
-        run_directory / "candidate_snapshot.py",
-    )
-
-    prompt_path = task_path / "prompt.md"
-
-    if prompt_path.exists():
-        shutil.copy2(
-            prompt_path,
-            run_directory / "prompt.md",
-        )
-
     (run_directory / "public_test_output.txt").write_text(
         public_result["output"],
         encoding="utf-8",
@@ -245,6 +372,11 @@ def evaluate_candidate(
         hidden_result["output"],
         encoding="utf-8",
     )
+    for suite, suite_result in (("public", public_result), ("hidden", hidden_result)):
+        if suite_result["junit_xml"] is not None:
+            (run_directory / f"{suite}_test_results.xml").write_text(
+                suite_result["junit_xml"], encoding="utf-8",
+            )
 
     with (run_directory / "result.json").open(
         "w",

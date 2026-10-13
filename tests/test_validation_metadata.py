@@ -77,3 +77,13 @@ def test_skipped_task_id_is_warning(
         "Task IDs skip from task_001 to task_003"
         in report["tasks"][1]["warnings"]
     )
+
+
+def test_unhashable_difficulty_is_reported(make_valid_task):
+    task_path = make_valid_task()
+    metadata = _read_metadata(task_path)
+    for invalid in ([], {}):
+        metadata['difficulty'] = invalid
+        _write_metadata(task_path, metadata)
+        _, errors = validate_metadata(task_path)
+        assert any('difficulty must be' in error for error in errors)

@@ -1,453 +1,155 @@
-# CodeAgentBench
+# Code Reliability Bench
 
-CodeAgentBench is a small, reproducible benchmark for evaluating how reliably LLM coding agents solve verifiable programming tasks.
+An execution-graded benchmark for coding agents.
 
-The project focuses on more than whether generated code looks plausible. Each task is graded through executable tests, including hidden cases designed to expose shallow implementations, missed edge cases, and specification misunderstandings.
+It tests whether agents implement a written contract correctly, including the
+edge cases their visible tests miss.
 
-The benchmark currently contains four execution-graded Python tasks
-across numerical robustness, algorithmic debugging, time-series
-correctness, and data-parsing robustness.
+The corpus contains **32 Python programming tasks and 373 public/hidden tests**, balanced across numerical
+robustness, graph algorithms, time-series alignment, and CSV parsing. Each task
+includes a specification, a flawed starter, a reference implementation, public
+and hidden tests, metadata, and at least one deliberate defect fixture.
 
-## Project Goals
+This project was previously named CodeAgentBench. It is now Code Reliability Bench to
+avoid confusion with other projects using that name. The original Git history
+and frozen experiment evidence are preserved.
 
-CodeAgentBench is being built to explore questions such as:
+## What it measures
 
-* Can an LLM-generated solution pass both basic and adversarial tests?
-* How often do coding agents pass visible tests but fail hidden tests?
-* What types of errors occur most frequently?
-* How do prompting and feedback strategies affect correctness?
-* Can a small benchmark produce useful failure analysis rather than only a single score?
+The primary scores are the proportions of tasks passing every public test,
+every hidden test, and both suites. Missing candidates count as unsolved and
+remain separately identified. The public–hidden gap helps locate solutions
+that handle the visible examples but miss requirements elsewhere in the prompt.
 
-The project is also intended as an exercise in benchmark design, software testing, reproducible experimentation, and AI evaluation.
+A reference implementation passing its tests verifies internal consistency;
+it is not a coding-agent result. Known flawed implementations check that tests
+can detect specific defects; they do not establish general detection coverage.
 
-## Current Status
+See the [task catalog](docs/task_catalog.md), [methodology](docs/methodology.md),
+and [measured quality report](reports/quality.md). The report's machine-readable
+companion includes a corpus fingerprint and exact failed tests for each defect.
 
-The project is in its initial development stage.
+## Quick start
 
-Currently implemented:
-
-* Standardized benchmark task structure
-* Public and hidden test separation
-* Verified reference solutions
-* Task metadata and failure-mode labels
-* A task runner for evaluating candidate solutions
-* Provider-agnostic one-shot candidate generation
-* Benchmark integrity validation with a machine-readable report
-* Task 001: Rolling Z-Score
-* Task 002: Shortest-Path Bug Repair
-* Task 003: Lookahead-Safe Signal Alignment
-* Task 004: Robust Market CSV Parsing
-* Initial benchmark-design and failure-analysis documentation
-
-Planned next steps:
-
-* Add additional benchmark tasks
-* Add real API and test-feedback agent adapters
-* Expand failure-mode analysis
-* Add safer execution isolation for generated code
-
-## Repository Structure
-
-```text
-CodeAgentBench/
-├── agents/                  # LLM agent and prompting strategies
-├── docs/                    # Benchmark design and methodology notes
-├── reports/                 # Technical reports and project writeups
-├── results/                 # Evaluation results and failure analyses
-├── runner/                  # Benchmark execution scripts
-├── tasks/                   # Individual benchmark tasks
-│   └── task_001_rolling_zscore/
-│       ├── prompt.md
-│       ├── starter.py
-│       ├── reference_solution.py
-│       ├── test_public.py
-│       ├── test_hidden.py
-│       └── metadata.json
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
-
-## Benchmark Task Design
-
-Each task contains six core files.
-
-### `prompt.md`
-
-The written specification shown to the coding agent.
-
-The prompt defines the expected behavior, inputs, outputs, and relevant edge-case requirements.
-
-### `starter.py`
-
-The incomplete or incorrect implementation that the coding agent must modify.
-
-### `reference_solution.py`
-
-A known-good implementation used to verify that the task and its tests are internally consistent.
-
-### `test_public.py`
-
-Visible tests that check basic behavior and clarify the task.
-
-Public tests are intentionally limited. Passing them does not guarantee that a candidate solution is correct.
-
-### `test_hidden.py`
-
-Private tests that check boundary conditions, numerical issues, robustness, and common implementation mistakes.
-
-Hidden tests may test difficult cases, but they should never enforce requirements that are absent from the prompt.
-
-### `metadata.json`
-
-Structured information about the task, including:
-
-* category
-* difficulty
-* concepts tested
-* number of public and hidden tests
-* targeted failure modes
-* expected agent mistakes
-
-## Current Benchmark Tasks
-
-| Task | Category | Capability |
-|---|---|---|
-| `task_001_rolling_zscore` | Numerical robustness | Rolling windows, NaNs, zero variance, population standard deviation |
-| `task_002_shortest_path` | Algorithmic debugging | Dijkstra repair, edge relaxation, graph edge cases, path reconstruction |
-| `task_003_signal_alignment` | Time-series correctness | Return alignment, lookahead-bias prevention, turnover-based transaction costs |
-| `task_004_market_csv` | Data-parsing robustness | CSV quoting, normalization, numeric conversion, missing values, malformed-row validation |
-
-## Task 001: Rolling Z-Score
-
-The first task asks an agent to implement a rolling z-score function.
-
-It evaluates whether the candidate can correctly handle:
-
-* rolling-window selection
-* population standard deviation
-* zero-variance windows
-* missing values represented by `NaN`
-* invalid window sizes
-* windows larger than the input
-* negative values
-* numerical edge cases
-
-The task is designed to catch implementations that appear correct on simple increasing sequences but fail under less obvious conditions.
-
-## Task 003: Lookahead-Safe Signal Alignment
-
-Task 003 asks an agent to repair a strategy-return calculation that
-uses the current signal for an already-realized price movement. A
-signal at index `t - 1` is the latest position known before the return
-from `t - 1` to `t`, so the aligned calculation uses
-`signals[t - 1]`.
-
-The task also checks proportional transaction costs, turnover timing,
-long and short positions, flat prices, invalid prices, and boundary
-behavior.
-
-## Task 004: Robust Market CSV Parsing
-
-Task 004 asks an agent to repair a market-data CSV parser. It checks
-whether the implementation uses Python's CSV parser instead of
-splitting records on commas, which corrupts quoted values such as
-`"earnings, after close"`.
-
-The task also checks fixed-header validation, whitespace and symbol
-normalization, numeric conversion, missing numeric values, blank rows,
-and malformed row rejection.
-
-## Installation
-
-Clone the repository and enter the project directory:
+Install Python 3.11 or newer and Docker with a running Linux container engine.
+Then clone the repository and run the complete reference benchmark:
 
 ```bash
-git clone <repository-url>
-cd CodeAgentBench
+git clone https://github.com/mylesbrandon/code-reliability-bench.git
+cd code-reliability-bench
+python3 -m runner.docker_benchmark
 ```
 
-Create a virtual environment:
+The single command builds the Linux image, validates the corpus and reference
+solutions, checks starters and deliberate defect fixtures, and evaluates all
+32 reference candidates. It needs no model account or host Python packages.
+The default run requires every reference candidate to pass both suites. Docker
+needs network access to build the image; evaluation runs without a network.
+
+Each invocation writes a separate directory under `work/docker-runs/` with
+the image identity, validation report, task results, logs, and execution settings.
+Public and hidden suites each have a 10-second deadline; the complete container
+workflow has a separate 600-second deadline. See the [Docker workflow guide](docs/docker_workflow.md)
+for custom candidates, resource limits, exit codes, and timeout cleanup.
+
+For native development without Docker:
 
 ```bash
-python -m venv .venv
-```
-
-Activate it on macOS or Linux:
-
-```bash
+python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install --require-hashes -r requirements.txt
+python -m pytest -q
+python runner/check_quality.py
 ```
 
-Activate it on Windows PowerShell:
+On Windows, create the environment with `py -m venv .venv` and activate it
+with `.venv\Scripts\Activate.ps1` in PowerShell. The harness uses Python's
+standard library and pytest; no model account is needed for validation.
 
-```powershell
-.venv\Scripts\Activate.ps1
-```
+`check_quality.py` verifies the minimum 32 tasks / 200 executed tests target,
+reference correctness, rejection of flawed starters, agreement between task
+references and the reference candidate set, and hidden-test rejection of
+known defect fixtures. It writes `work/quality.json` and exits nonzero if a
+check fails. Counts exclude harness tests, repeated runs, and skipped cases.
 
-Install dependencies:
+CI runs the native checks on Linux, macOS, and Windows with Python 3.11 and 3.14.
+A Linux Docker job exercises the complete workflow and its timeout controls.
+
+## Evaluate a solution set
+
+Place candidate files named `task_001.py` through `task_032.py` in a directory:
 
 ```bash
-python -m pip install -r requirements.txt
+python3 -m runner.docker_benchmark \
+  --solution-set /path/to/candidates \
+  --model your-model \
+  --condition one_shot \
+  --timeout-seconds 10 \
+  --results-root work/docker-runs
 ```
 
-The current project requires Python and `pytest`.
+The candidate directory is mounted read-only. Candidate failures and missing
+files affect the score; a completed evaluation still exits successfully unless
+you add `--require-all-pass`. Corpus validation failures always stop the workflow.
 
-## Generate One-Shot Candidates
+Each public and hidden suite receives a fresh working directory containing
+only its test module and the candidate as `starter.py`. A pass requires a
+successful process exit and a nonempty JUnit report with no failures, errors,
+or skips. Timeouts and collection errors are recorded separately from test
+failures. Runs preserve candidate and task snapshots, SHA-256 hashes, runtime
+versions, logs, structured suite counts, and timings.
 
-Candidate generation is separate from evaluation. An agent receives
-only the task specification, starter code, and public tests. The
-generation pipeline preserves the exact prompt and raw response before
-extracting a clean Python candidate.
+**Execution is for trusted or reviewed candidate code.** The Docker workflow
+uses a non-root user, a read-only root filesystem, no network, and bounded CPU,
+memory, process count, and temporary space. It is not a grading service for
+hostile submissions: the public corpus, including references, is readable in
+the image, and candidates can alter writable reports. The native runner executes
+with your account's filesystem and network access. See
+[execution limits](docs/methodology.md#execution-boundary).
 
-Generate one task with the manual adapter:
+Full commands and result semantics are in the
+[runner guide](docs/running_the_benchmark.md).
+
+## Generate candidates
+
+Generation includes only the specification, starter, and public tests:
 
 ```bash
 python runner/generate_candidates.py \
-  --agent manual \
-  --model model_001 \
-  --condition one_shot \
-  --tasks task_001
+  --agent manual --model your-model --condition one_shot --tasks task_005
 ```
 
-Generate every task with deterministic mock responses:
+The manual and deterministic mock adapters are included. Each generation
+attempt gets a new evidence directory with its prompt, raw response, extracted
+source when valid, timestamps, hashes, and environment information. Repeating
+an attempt never overwrites earlier evidence. The clean solution-set directory
+contains the latest attempt per task.
 
-```bash
-python runner/generate_candidates.py \
-  --agent mock \
-  --model mock-agent \
-  --condition one_shot \
-  --tasks all \
-  --mock-solutions path/to/mock_solutions
-```
+See [generation documentation](docs/agent_generation.md) for adapters,
+syntax validation, failed-attempt handling, and information separation.
 
-Generation evidence is saved under `results/generations/`. Clean
-solution sets are saved under `results/candidates/generated/`. See
-`docs/agent_generation.md` for the information-isolation contract,
-artifact layout, parsing rules, and adapter interface.
+## Evidence and limitations
 
-### Pilot 001
+Pilot 001 is preserved under `results/experiments/pilot_001/`. All four captured
+responses were syntax-invalid, so its recorded 0/4 score does **not** establish
+behavioral model performance. Manual copy/paste leaves the origin of formatting
+damage uncertain. See the [original analysis](results/experiments/pilot_001/analysis.md).
 
-Pilot 001 is frozen in `experiments/pilot_001.json`, with complete
-generation and evaluation evidence under
-`results/experiments/pilot_001/`.
+The test corpus is public. “Hidden” means withheld from the generation prompt,
+not secret or guaranteed absent from training data. The tasks are focused
+function-level repairs, not full repository development. No new multi-model
+comparison or independent human validation is claimed by this release.
 
-* Model: GPT-5.6 Sol via ChatGPT manual copy/paste
-* Condition: one-shot across Tasks 001-004
-* Tasks attempted: 4/4
-* Public, hidden, and overall pass rates: 0.0%
-* Regenerations after a valid response: 0
+## Development and authorship
 
-## Running a Task
-
-Run Task 001 against the verified reference solution:
-
-```bash
-python runner/run_task.py \
-  --task tasks/task_001_rolling_zscore \
-  --solution results/candidates/reference/task_001.py \
-  --model reference \
-  --condition validation
-```
-
-On Windows PowerShell, the same command can be written on one line:
-
-```powershell
-python runner/run_task.py --task tasks/task_001_rolling_zscore --solution results/candidates/reference/task_001.py --model reference --condition validation
-```
-
-Expected output for a correct solution:
-
-```text
-Task: task_001 — rolling_zscore
-Model: reference
-Condition: validation
-Public tests: PASS
-Hidden tests: PASS
-Overall: PASS
-```
-
-## Run the full benchmark
-
-Evaluate a generated one-shot solution set:
-
-```bash
-python runner/run_benchmark.py \
-  --solution-set results/candidates/generated/model_001/one_shot \
-  --model model_001 \
-  --condition one_shot
-```
-
-Or run the verified reference solution set:
-
-```bash
-python runner/run_benchmark.py \
-  --solution-set results/candidates/reference \
-  --model reference \
-  --condition validation
-```
-
-See `docs/running_the_benchmark.md` for full instructions.
-
-## Validate the benchmark
-
-Before evaluating candidate solutions, validate all task definitions:
-
-```bash
-python runner/validate_benchmark.py
-```
-
-The validator checks task structure, metadata, test counts, reference
-correctness, starter behavior, test isolation, and prompt contracts. It
-also writes `results/validation/benchmark_validation.json`. See
-`docs/benchmark_validation.md` for the full validation contract.
-
-## Evaluation Workflow
-
-The intended workflow for each candidate solution is:
-
-1. Give the agent only the task prompt, starter code, and public tests.
-2. Save the agent’s submitted solution.
-3. Run the public tests.
-4. Run the hidden tests.
-5. Record the result.
-6. Identify which hidden tests failed.
-7. Categorize the failure.
-8. Write a short qualitative analysis.
-
-A candidate should not receive access to:
-
-* `reference_solution.py`
-* `test_hidden.py`
-* prior hidden-test results during final evaluation
-
-## Initial Metrics
-
-The first version of the benchmark will track:
-
-* public-test pass rate
-* hidden-test pass rate
-* overall task pass rate
-* public-to-hidden performance gap
-* runtime or syntax errors
-* failure categories
-* number of revisions used
-
-As the benchmark grows, results will also be grouped by task category and capability.
-
-## Failure Categories
-
-Planned failure labels include:
-
-* edge-case miss
-* specification misunderstanding
-* public-test overfitting
-* runtime error
-* incorrect algorithm
-* numerical instability
-* regression
-* excessive time or memory usage
-* missing input validation
-* lookahead bias in time-series tasks
-
-The goal is to explain why an agent failed, rather than reporting only a total score.
-
-## Benchmark Principles
-
-Tasks in CodeAgentBench should be:
-
-* **Verifiable:** correctness can be determined through execution.
-* **Fair:** hidden tests correspond to written requirements.
-* **Focused:** each task tests a reasonably narrow set of capabilities.
-* **Reproducible:** another person can run the same evaluation.
-* **Diagnostic:** failures reveal something meaningful about the candidate.
-* **Fresh when possible:** custom tasks reduce reliance on widely circulated coding problems.
-* **Transparent:** task design and evaluation methodology are documented.
-
-## Use of AI During Development
-
-AI tools may be used for:
-
-* brainstorming possible edge cases
-* debugging test infrastructure
-* explaining unfamiliar libraries
-* reviewing documentation
-* suggesting code refactors
-* acting as benchmark participants
-
-However, benchmark design decisions, task specifications, reference-solution verification, hidden-test selection, and failure analysis are manually reviewed.
-
-The purpose of the project is not to avoid AI-assisted development. It is to ensure that the benchmark’s methodology and conclusions are understood and defensible.
-
-## Security Notice
-
-The current runner executes candidate Python code directly on the local machine.
-
-Only trusted or manually reviewed candidate solutions should be evaluated in the current version.
-
-Future versions should add stronger isolation through tools such as:
-
-* Docker containers
-* execution timeouts
-* CPU and memory limits
-* filesystem restrictions
-* disabled network access
-
-Do not run arbitrary untrusted code using the current runner.
-
-## Roadmap
-
-### Phase 1: Benchmark Foundation
-
-* [x] Define repository structure
-* [x] Establish task file format
-* [x] Complete Task 001
-* [x] Separate public and hidden tests
-* [x] Add metadata and task-design notes
-* [x] Complete and validate the task runner
-* [x] Test intentionally flawed implementations
-
-### Phase 2: Initial Evaluation
-
-* [x] Add reproducible one-shot candidate generation
-* [ ] Run a one-shot LLM baseline
-* [ ] Record public and hidden test results
-* [ ] Create a structured results format
-* [ ] Write the first detailed failure analyses
-* [x] Add Task 004
-* [ ] Add Task 005
-
-### Phase 3: Benchmark Expansion
-
-* [ ] Expand to at least 10 tasks
-* [ ] Add multiple task categories
-* [ ] Add a public-test feedback baseline
-* [ ] Compare prompting strategies
-* [ ] Produce an early technical report
-
-### Phase 4: Reliability and Scale
-
-* [ ] Add isolated execution
-* [ ] Add runtime and resource limits
-* [ ] Expand to 30–50 tasks
-* [ ] Improve contamination documentation
-* [ ] Publish reproducible benchmark results
-
-## Contributing
-
-The project is currently an early independent research and learning project.
-
-Potential future contributions may include:
-
-* new benchmark tasks
-* stronger hidden tests
-* additional agent baselines
-* execution-safety improvements
-* benchmark-design feedback
-* failure-taxonomy improvements
-
-All proposed tasks should include a clear specification, verified reference solution, public tests, hidden tests, and metadata.
+This is an independent, AI-assisted project. AI assistance was used to draft
+and review code, task contracts, tests, and documentation. Automated reference
+checks, deliberately flawed controls, and independent agent review support
+this release; they do not substitute for human review or prove that every
+specification is complete. See the [development notes](docs/development.md)
+for the current release's scope and the [contributor guide](CONTRIBUTING.md)
+for how to add or revise tasks without invalidating old evidence.
 
 ## License
 
-A license has not yet been selected.
+[MIT](LICENSE). Copyright 2026 Myles Brandon.

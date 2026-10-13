@@ -1,0 +1,28 @@
+{
+  "task_id": "task_020",
+  "name": "time_weighted_mean",
+  "task_type": "function_implementation",
+  "category": "time_series_correctness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "duration_weighting",
+    "piecewise_constant_signal",
+    "causal_windows",
+    "partial_coverage"
+  ],
+  "public_tests": 4,
+  "hidden_tests": 9,
+  "failure_modes_targeted": [
+    "sample_average_instead_of_duration",
+    "full_window_denominator",
+    "query_timestamp_leakage",
+    "missing_left_boundary"
+  ],
+  "contract_keywords": [
+    "half-open interval",
+    "positive covered duration",
+    "strictly increasing",
+    "zero duration"
+  ]
+}

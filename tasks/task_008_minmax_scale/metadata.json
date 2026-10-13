@@ -1,0 +1,24 @@
+{
+  "task_id": "task_008",
+  "name": "minmax_scale",
+  "task_type": "bug_repair",
+  "category": "numerical_robustness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "range_scaling",
+    "degenerate_inputs",
+    "cancellation_avoidance"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 9,
+  "failure_modes_targeted": [
+    "range_scaling",
+    "degenerate_inputs",
+    "cancellation_avoidance"
+  ],
+  "contract_keywords": [
+    "ValueError",
+    "Do not mutate"
+  ]
+}

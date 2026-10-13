@@ -1,0 +1,25 @@
+{
+  "task_id": "task_032",
+  "name": "csv_pivot",
+  "task_type": "implementation",
+  "category": "data_parsing_robustness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "long_to_wide",
+    "deterministic_order",
+    "duplicate_detection",
+    "missing_cells"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 7,
+  "failure_modes_targeted": [
+    "duplicate_pivot_cell_overwrite"
+  ],
+  "contract_keywords": [
+    "FIRST appearance",
+    "fill",
+    "ValueError"
+  ],
+  "authorship": "AI-assisted task design, reference, and tests; independent human review pending"
+}

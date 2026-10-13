@@ -1,0 +1,24 @@
+{
+  "task_id": "task_031",
+  "name": "csv_export",
+  "task_type": "implementation",
+  "category": "data_parsing_robustness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "csv_serialization",
+    "formula_string_transformation",
+    "type_validation"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 7,
+  "failure_modes_targeted": [
+    "omits_formula_string_escaping"
+  ],
+  "contract_keywords": [
+    "apostrophe",
+    "CRLF",
+    "ValueError"
+  ],
+  "authorship": "AI-assisted task design, reference, and tests; independent human review pending"
+}

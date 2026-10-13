@@ -1,0 +1,28 @@
+{
+  "task_id": "task_013",
+  "name": "strong_components",
+  "title": "Strongly Connected Components",
+  "task_type": "bug_repair",
+  "category": "algorithmic_debugging",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "directed_graphs",
+    "strong_connectivity",
+    "graph_transpose",
+    "iterative_dfs"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 7,
+  "failure_modes_targeted": [
+    "weak_instead_of_strong_connectivity",
+    "single_pass_reachability",
+    "lost_isolated_nodes",
+    "unstable_output"
+  ],
+  "contract_keywords": [
+    "Do not mutate",
+    "ValueError",
+    "duplicate"
+  ]
+}

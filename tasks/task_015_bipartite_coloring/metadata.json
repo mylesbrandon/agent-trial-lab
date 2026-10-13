@@ -1,0 +1,28 @@
+{
+  "task_id": "task_015",
+  "name": "bipartite_coloring",
+  "title": "Canonical Bipartite Coloring",
+  "task_type": "bug_repair",
+  "category": "algorithmic_debugging",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "undirected_graphs",
+    "bipartite_graphs",
+    "breadth_first_search",
+    "component_orientation"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 8,
+  "failure_modes_targeted": [
+    "directed_interpretation",
+    "missed_odd_cycle",
+    "noncanonical_coloring",
+    "missing_components"
+  ],
+  "contract_keywords": [
+    "Do not mutate",
+    "ValueError",
+    "duplicate"
+  ]
+}

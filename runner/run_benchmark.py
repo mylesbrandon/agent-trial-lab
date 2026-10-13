@@ -5,18 +5,22 @@ from pathlib import Path
 
 if __package__:
     from .evaluation import (
+        DEFAULT_TIMEOUT_SECONDS,
         build_missing_result,
         discover_tasks,
         evaluate_candidate,
         load_metadata,
+        positive_timeout,
         write_summary_files,
     )
 else:
     from evaluation import (
+        DEFAULT_TIMEOUT_SECONDS,
         build_missing_result,
         discover_tasks,
         evaluate_candidate,
         load_metadata,
+        positive_timeout,
         write_summary_files,
     )
 
@@ -60,6 +64,10 @@ def parse_arguments() -> argparse.Namespace:
         default=Path("results"),
     )
 
+    parser.add_argument(
+        "--timeout-seconds", type=positive_timeout, default=DEFAULT_TIMEOUT_SECONDS,
+        help="Maximum seconds per public or hidden suite (default: 10).",
+    )
     return parser.parse_args()
 
 
@@ -98,7 +106,7 @@ def main() -> None:
 
     results: list[dict] = []
 
-    print("CodeAgentBench-Lite Evaluation")
+    print("Code Reliability Bench Evaluation")
     print(f"Model: {args.model}")
     print(f"Condition: {args.condition}")
     print()
@@ -123,6 +131,7 @@ def main() -> None:
                 model=args.model,
                 condition=args.condition,
                 results_root=args.results_root,
+                timeout_seconds=args.timeout_seconds,
             )
 
         results.append(result)

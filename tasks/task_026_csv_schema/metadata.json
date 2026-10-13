@@ -1,0 +1,24 @@
+{
+  "task_id": "task_026",
+  "name": "csv_schema",
+  "task_type": "implementation",
+  "category": "data_parsing_robustness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "schema_validation",
+    "header_normalization",
+    "csv_quoting"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 7,
+  "failure_modes_targeted": [
+    "duplicate_header_overwrite"
+  ],
+  "contract_keywords": [
+    "casefold()",
+    "duplicates",
+    "ValueError"
+  ],
+  "authorship": "AI-assisted task design, reference, and tests; independent human review pending"
+}
