@@ -10,6 +10,7 @@ import json
 import signal
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -72,9 +73,11 @@ def docker(monkeypatch):
     process = DockerProcessDouble()
     monkeypatch.setattr(launcher.shutil, "which", lambda name: "/fake/docker")
     monkeypatch.setattr(launcher.subprocess, "run", process)
-    # Give Windows and POSIX identical host identity without changing ownership.
-    monkeypatch.setattr(launcher.os, "getuid", lambda: 501, raising=False)
-    monkeypatch.setattr(launcher.os, "getgid", lambda: 20, raising=False)
+    # Replace only the launcher's OS dependency. Patching the shared os module
+    # changes pytest's identity checks for its own temporary directories.
+    monkeypatch.setattr(launcher, "os", SimpleNamespace(
+        getuid=lambda: 501, getgid=lambda: 20,
+    ))
     return process
 
 
