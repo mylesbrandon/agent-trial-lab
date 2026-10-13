@@ -301,7 +301,7 @@ def main() -> None:
         results_root=args.results_root,
     )
 
-    print("Agent Trial Lab Candidate Generation")
+    print("Code Reliability Bench Candidate Generation")
     print(f"Model: {args.model}")
     print(f"Condition: {args.condition}")
     print()

@@ -40,7 +40,7 @@ def write_report(report: dict, report_path: Path) -> None:
 
 
 def print_report(report: dict) -> None:
-    print("Validating Agent Trial Lab...")
+    print("Validating Code Reliability Bench...")
     print()
 
     for error in report["global_errors"]:

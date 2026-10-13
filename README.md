@@ -1,14 +1,16 @@
-# Agent Trial Lab
+# Code Reliability Bench
 
-An execution-graded benchmark for studying whether coding agents implement a
-written contract correctly, including the edge cases their visible tests miss.
+An execution-graded benchmark for coding agents.
+
+It tests whether agents implement a written contract correctly, including the
+edge cases their visible tests miss.
 
 The corpus contains **32 Python programming tasks and 373 public/hidden tests**, balanced across numerical
 robustness, graph algorithms, time-series alignment, and CSV parsing. Each task
 includes a specification, a flawed starter, a reference implementation, public
 and hidden tests, metadata, and at least one deliberate defect fixture.
 
-This project was previously named CodeAgentBench. It is now Agent Trial Lab to
+This project was previously named CodeAgentBench. It is now Code Reliability Bench to
 avoid confusion with other projects using that name. The original Git history
 and frozen experiment evidence are preserved.
 
@@ -32,8 +34,8 @@ companion includes a corpus fingerprint and exact failed tests for each defect.
 Use Python 3.11 or newer. From a terminal:
 
 ```bash
-git clone https://github.com/mylesbrandon/agent-trial-lab.git
-cd agent-trial-lab
+git clone https://github.com/mylesbrandon/code-reliability-bench.git
+cd code-reliability-bench
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --require-hashes -r requirements.txt

@@ -1,4 +1,4 @@
-# Running Agent Trial Lab
+# Running Code Reliability Bench
 
 ## Candidate solution sets
 

@@ -1,6 +1,6 @@
 # One-Shot Candidate Generation
 
-Agent Trial Lab separates candidate generation from candidate
+Code Reliability Bench separates candidate generation from candidate
 evaluation. Generation produces a reproducible record of what an agent
 saw and returned. Evaluation can then run the preserved candidate as
 many times as needed without calling the agent again.

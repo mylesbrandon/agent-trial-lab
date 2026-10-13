@@ -57,7 +57,7 @@ def check_quality(root: Path, minimum_tasks: int = 32, minimum_tests: int = 200)
         if not flawed:
             problems.append(f'{task_id}: no deliberate defect fixture.')
         for path in flawed:
-            with tempfile.TemporaryDirectory(prefix='agent-trial-audit-') as directory:
+            with tempfile.TemporaryDirectory(prefix='code-reliability-audit-') as directory:
                 public, hidden = run_solution_suites(task, path.read_bytes(), Path(directory))
             # A syntax/collection/timeout failure is not evidence that a behavioral test caught the intended bug.
             detected = hidden['status'] == 'failed' and hidden['failures'] > 0 and hidden['errors'] == 0
@@ -73,7 +73,7 @@ def check_quality(root: Path, minimum_tasks: int = 32, minimum_tests: int = 200)
             if not detected:
                 problems.append(f'{task_id}/{path.name}: hidden tests did not demonstrate behavioral defect detection.')
     return {
-        'project': 'Agent Trial Lab',
+        'project': 'Code Reliability Bench',
         'generated_at_utc': datetime.now(timezone.utc).isoformat(),
         'python': platform.python_version(),
         'platform': platform.platform(),
@@ -106,7 +106,7 @@ def main() -> None:
     report = check_quality(args.root, args.minimum_tasks, args.minimum_tests)
     args.report_path.parent.mkdir(parents=True, exist_ok=True)
     args.report_path.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-    print(f"Agent Trial Lab: {report['task_count']} tasks; {report['public_test_count']} public + {report['hidden_test_count']} hidden = {report['total_test_count']} tests")
+    print(f"Code Reliability Bench: {report['task_count']} tasks; {report['public_test_count']} public + {report['hidden_test_count']} hidden = {report['total_test_count']} tests")
     print(f"References passing: {report['reference_tasks_passed']}/{report['task_count']}")
     print(f"Deliberate defects detected: {report['defect_fixtures_detected']}/{report['defect_fixture_count']}")
     for problem in report['problems']:

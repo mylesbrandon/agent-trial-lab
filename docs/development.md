@@ -1,9 +1,9 @@
-# Agent Trial Lab development notes
+# Code Reliability Bench development notes
 
 ## October 12, 2026 expansion
 
 The project was cloned from mylesbrandon/CodeAgentBench with its history intact
-and renamed Agent Trial Lab. The original four tasks and frozen pilot were
+and renamed Code Reliability Bench. The original four tasks and frozen pilot were
 retained. Twenty-eight additional contracts bring each category to eight tasks.
 
 Development used AI assistance for implementation, test design, documentation,

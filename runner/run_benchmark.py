@@ -106,7 +106,7 @@ def main() -> None:
 
     results: list[dict] = []
 
-    print("Agent Trial Lab Evaluation")
+    print("Code Reliability Bench Evaluation")
     print(f"Model: {args.model}")
     print(f"Condition: {args.condition}")
     print()
