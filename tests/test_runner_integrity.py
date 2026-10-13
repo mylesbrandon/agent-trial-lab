@@ -11,7 +11,7 @@ from runner.evaluation import evaluate_candidate, positive_timeout
 
 def evaluate(task: Path, source: str, timeout: float = 10.0):
     candidate = task.parent / "candidate.py"
-    candidate.write_text(source, encoding="utf-8")
+    candidate.write_bytes(source.encode("utf-8"))
     return evaluate_candidate(
         task, candidate, "test-model", "integrity",
         task.parent / "results", timeout_seconds=timeout,

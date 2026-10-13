@@ -1,2 +1,3 @@
 # Keep the canonical corpus fingerprint stable across checkout platforms.
 tasks/** text eol=lf
+results/candidates/reference/*.py text eol=lf
