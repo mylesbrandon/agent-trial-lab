@@ -31,11 +31,30 @@ companion includes a corpus fingerprint and exact failed tests for each defect.
 
 ## Quick start
 
-Use Python 3.11 or newer. From a terminal:
+Install Python 3.11 or newer and Docker with a running Linux container engine.
+Then clone the repository and run the complete reference benchmark:
 
 ```bash
 git clone https://github.com/mylesbrandon/code-reliability-bench.git
 cd code-reliability-bench
+python3 -m runner.docker_benchmark
+```
+
+The single command builds the Linux image, validates the corpus and reference
+solutions, checks starters and deliberate defect fixtures, and evaluates all
+32 reference candidates. It needs no model account or host Python packages.
+The default run requires every reference candidate to pass both suites. Docker
+needs network access to build the image; evaluation runs without a network.
+
+Each invocation writes a separate directory under `work/docker-runs/` with
+the image identity, validation report, task results, logs, and execution settings.
+Public and hidden suites each have a 10-second deadline; the complete container
+workflow has a separate 600-second deadline. See the [Docker workflow guide](docs/docker_workflow.md)
+for custom candidates, resource limits, exit codes, and timeout cleanup.
+
+For native development without Docker:
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --require-hashes -r requirements.txt
@@ -53,20 +72,25 @@ references and the reference candidate set, and hidden-test rejection of
 known defect fixtures. It writes `work/quality.json` and exits nonzero if a
 check fails. Counts exclude harness tests, repeated runs, and skipped cases.
 
-CI runs the same checks on Linux, macOS, and Windows with Python 3.11 and 3.14.
+CI runs the native checks on Linux, macOS, and Windows with Python 3.11 and 3.14.
+A Linux Docker job exercises the complete workflow and its timeout controls.
 
 ## Evaluate a solution set
 
 Place candidate files named `task_001.py` through `task_032.py` in a directory:
 
 ```bash
-python runner/run_benchmark.py \
-  --solution-set results/candidates/reference \
-  --model reference \
-  --condition validation \
+python3 -m runner.docker_benchmark \
+  --solution-set /path/to/candidates \
+  --model your-model \
+  --condition one_shot \
   --timeout-seconds 10 \
-  --results-root work/reference-evaluation
+  --results-root work/docker-runs
 ```
+
+The candidate directory is mounted read-only. Candidate failures and missing
+files affect the score; a completed evaluation still exits successfully unless
+you add `--require-all-pass`. Corpus validation failures always stop the workflow.
 
 Each public and hidden suite receives a fresh working directory containing
 only its test module and the candidate as `starter.py`. A pass requires a
@@ -75,10 +99,13 @@ or skips. Timeouts and collection errors are recorded separately from test
 failures. Runs preserve candidate and task snapshots, SHA-256 hashes, runtime
 versions, logs, structured suite counts, and timings.
 
-**Execution is for trusted or reviewed candidate code.** Temporary directories
-and timeouts are reliability controls, not a security sandbox. Code still has
-your account's filesystem and network access. Do not evaluate arbitrary hostile
-submissions on your everyday computer. See [execution limits](docs/methodology.md#execution-boundary).
+**Execution is for trusted or reviewed candidate code.** The Docker workflow
+uses a non-root user, a read-only root filesystem, no network, and bounded CPU,
+memory, process count, and temporary space. It is not a grading service for
+hostile submissions: the public corpus, including references, is readable in
+the image, and candidates can alter writable reports. The native runner executes
+with your account's filesystem and network access. See
+[execution limits](docs/methodology.md#execution-boundary).
 
 Full commands and result semantics are in the
 [runner guide](docs/running_the_benchmark.md).

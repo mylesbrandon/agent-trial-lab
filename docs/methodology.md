@@ -59,17 +59,30 @@ silently evaluated in its place. Attempt directories preserve prior evidence.
 
 ## Execution boundary
 
-The local runner uses fresh directories per suite, omits reference files, ignores
+The native runner uses fresh directories per suite, omits reference files, ignores
 external Python/pytest configuration, disables third-party plugin autoload, and
 requires structured nonempty execution evidence. The default deadline is 10
 seconds per suite. On POSIX, timeout termination targets the process group; on
 Windows it terminates the pytest process, so child-process containment is weaker.
 
-These measures prevent common accidental scoring corruption. They do not defend
-against deliberate test/report tampering or filesystem access outside the test
-directory. There is no network isolation, memory limit, or hostile-code sandbox.
-Output is captured in memory. Only run trusted or reviewed code locally. A future
-untrusted-submission service needs a separately designed isolation boundary.
+These measures prevent common accidental scoring corruption. The native runner
+has no network isolation or memory limit and retains the host account's access
+outside the test directory. Output is captured in memory.
+
+The Docker workflow adds a Linux container with no network, a non-root user,
+a read-only root filesystem, dropped capabilities, and CPU, memory, process, and
+temporary-space limits. Candidate inputs are mounted read-only; only the dedicated
+run output directory is writable on the host. Separate deadlines bound the image
+build, the complete container workflow, and individual test suites. The workflow
+audits the corpus before evaluation and records the resolved image ID and
+validation evidence. See the [Docker guide](docker_workflow.md) for exact limits
+and result semantics.
+
+Both paths require trusted or reviewed code. The Docker image contains the full
+public corpus, including references and hidden tests, and candidates can modify
+writable reports. Container resource controls do not provide adversarial grading,
+test secrecy, or guaranteed host security. A service accepting unknown submissions
+needs a separately designed isolation and grading boundary.
 
 ## Reproducibility and release claims
 
@@ -77,6 +90,12 @@ The dependency lock contains hashes. Each evaluation records the Python/pytest
 versions, OS, candidate bytes, grading files, and hashes. The corpus report hashes
 all six canonical files for every task in deterministic path order. Original
 experiment artifacts are retained rather than edited into better outcomes.
+
+Docker invocations additionally record the image identity and resource settings
+and preserve validation plus evaluation reports in a unique directory. The base
+image is pinned by digest. Timing still depends on hardware, resource contention,
+and the Docker host. Reproducing a score requires preserving the corpus, candidate
+bytes, and execution settings, not just the command name.
 
 Claims supported by this release concern corpus size and checks performed. They
 do not imply external adoption, broad model accuracy, publication, novelty of

@@ -1,0 +1,17 @@
+# Allowlist: keep local candidates, credentials, Git history and old runs out.
+**
+!Dockerfile
+!requirements.txt
+!runner/
+!runner/*.py
+!tasks/
+!tasks/**
+!results/
+!results/candidates/
+!results/candidates/reference/
+!results/candidates/reference/*.py
+!results/baselines/
+!results/baselines/**
+**/__pycache__/
+**/*.pyc
+**/.DS_Store

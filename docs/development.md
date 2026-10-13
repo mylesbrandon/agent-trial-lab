@@ -36,6 +36,25 @@ a repeatable quality command, and CI across three operating systems and two
 Python versions. The current measured corpus totals and checks are recorded in
 reports/quality.md and reports/quality.json.
 
+## Docker evaluation workflow
+
+The Linux container workflow combines corpus validation and complete evaluation
+behind `python3 -m runner.docker_benchmark`. Its default checks all reference
+candidates and requires every task to pass. Custom solution sets are read-only
+inputs; every invocation receives a separate output directory with image,
+validation, and evaluation evidence.
+
+The workflow uses a digest-pinned Python image and hash-locked dependencies,
+separate build and container deadlines, and individual suite timeouts. A Linux
+Docker CI job exercises the full workflow and timeout cleanup, alongside the
+existing native platform matrix. CI artifacts and the Actions status for a
+particular revision supply execution evidence; the presence of a workflow file
+alone does not establish a passing run.
+
+The container limits host access and resource use for reviewed code. It does not
+make public references secret or protect grading reports from malicious candidates.
+See [the Docker workflow guide](docker_workflow.md) for the execution boundary.
+
 ## Next research work
 
 Conduct a human contract review, add an independent reference oracle where

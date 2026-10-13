@@ -5,8 +5,10 @@ import json
 from pathlib import Path
 
 if __package__:
+    from .evaluation import DEFAULT_TIMEOUT_SECONDS, positive_timeout
     from .validation import validate_all_tasks
 else:
+    from evaluation import DEFAULT_TIMEOUT_SECONDS, positive_timeout
     from validation import validate_all_tasks
 
 
@@ -27,6 +29,10 @@ def parse_arguments() -> argparse.Namespace:
             "results/validation/benchmark_validation.json"
         ),
         help="Path for the machine-readable validation report.",
+    )
+    parser.add_argument(
+        '--timeout-seconds', type=positive_timeout, default=DEFAULT_TIMEOUT_SECONDS,
+        help='Maximum seconds per reference or starter suite (default: 10).',
     )
     return parser.parse_args()
 
@@ -71,7 +77,7 @@ def print_report(report: dict) -> None:
 
 def main() -> None:
     args = parse_arguments()
-    report = validate_all_tasks(args.tasks_directory)
+    report = validate_all_tasks(args.tasks_directory, timeout_seconds=args.timeout_seconds)
     write_report(report, args.report_path)
     print_report(report)
 

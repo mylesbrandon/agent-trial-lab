@@ -4,18 +4,23 @@ import ast
 import hashlib
 import json
 import re
+import tempfile
 from collections import Counter
 from pathlib import Path
 from typing import Any
 
 if __package__:
     from .evaluation import (
+        DEFAULT_TIMEOUT_SECONDS,
         discover_tasks,
+        positive_timeout,
         run_solution_suites,
     )
 else:
     from evaluation import (
+        DEFAULT_TIMEOUT_SECONDS,
         discover_tasks,
+        positive_timeout,
         run_solution_suites,
     )
 
@@ -306,9 +311,11 @@ def _directory_snapshot(directory: Path) -> dict[str, str]:
 def _run_solution(
     task_path: Path,
     solution_path: Path,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     return run_solution_suites(
-        task_path, solution_path.read_bytes(), Path.cwd(),
+        task_path, solution_path.read_bytes(), Path(tempfile.gettempdir()),
+        timeout_seconds=timeout_seconds,
     )
 
 
@@ -332,6 +339,7 @@ def _pytest_failure_summary(result: dict[str, Any]) -> str:
 
 def validate_reference_solution(
     task_path: Path,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
     """
     Run the reference and starter in isolated task copies.
@@ -339,6 +347,7 @@ def validate_reference_solution(
     The original task is hashed before and after execution so an
     accidental mutation is also an integrity error.
     """
+    timeout_seconds = positive_timeout(timeout_seconds)
     result: dict[str, Any] = {
         "reference_public_passed": None,
         "reference_hidden_passed": None,
@@ -369,10 +378,12 @@ def validate_reference_solution(
         reference_public, reference_hidden = _run_solution(
             task_path,
             task_path / "reference_solution.py",
+            timeout_seconds=timeout_seconds,
         )
         starter_public, starter_hidden = _run_solution(
             task_path,
             task_path / "starter.py",
+            timeout_seconds=timeout_seconds,
         )
     except (OSError, UnicodeError) as error:
         result["errors"].append(
@@ -444,8 +455,12 @@ def validate_prompt_contract(
     ]
 
 
-def validate_task(task_path: Path) -> dict[str, Any]:
+def validate_task(
+    task_path: Path,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
     """Collect every validation issue for one benchmark task."""
+    timeout_seconds = positive_timeout(timeout_seconds)
     errors = validate_task_structure(task_path)
     metadata, metadata_errors = validate_metadata(task_path)
     errors.extend(metadata_errors)
@@ -471,7 +486,7 @@ def validate_task(task_path: Path) -> dict[str, Any]:
             "test_hidden.py",
         )
     ):
-        execution_result = validate_reference_solution(task_path)
+        execution_result = validate_reference_solution(task_path, timeout_seconds)
         errors.extend(execution_result["errors"])
         for suite, declared_count in (("public", public_count), ("hidden", hidden_count)):
             executed = execution_result.get(f"reference_{suite}_test_count")
@@ -549,8 +564,12 @@ def _append_cross_task_checks(
         result["valid"] = not result["errors"]
 
 
-def validate_all_tasks(tasks_directory: Path) -> dict[str, Any]:
+def validate_all_tasks(
+    tasks_directory: Path,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
     """Validate all discovered tasks and return a JSON-ready report."""
+    timeout_seconds = positive_timeout(timeout_seconds)
     global_errors: list[str] = []
 
     try:
@@ -565,7 +584,7 @@ def validate_all_tasks(tasks_directory: Path) -> dict[str, Any]:
         )
 
     task_results = [
-        validate_task(task_path)
+        validate_task(task_path, timeout_seconds)
         for task_path in task_paths
     ]
     _append_cross_task_checks(task_results)

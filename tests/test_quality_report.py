@@ -38,3 +38,15 @@ def test_collection_failure_is_not_counted_as_behavioral_detection(make_valid_ta
     assert not report['quality_passed']
     assert report['defect_fixtures_detected'] == 0
     assert len(report['problems']) == 3  # task threshold, test threshold, invalid fixture
+
+
+def test_invalid_metadata_still_produces_quality_failure_report(make_valid_task):
+    original = make_valid_task()
+    root = original.parent
+    (root / 'tasks').mkdir()
+    task = original.rename(root / 'tasks' / original.name)
+    (task / 'metadata.json').write_text('not json', encoding='utf-8')
+    report = check_quality(root, minimum_tasks=1, minimum_tests=2)
+    assert not report['quality_passed']
+    assert not report['validation']['benchmark_valid']
+    assert any('could not be parsed' in error for error in report['validation']['tasks'][0]['errors'])
