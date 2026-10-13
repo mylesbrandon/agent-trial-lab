@@ -4,7 +4,6 @@ import ast
 import hashlib
 import json
 import re
-import shutil
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -12,14 +11,12 @@ from typing import Any
 if __package__:
     from .evaluation import (
         discover_tasks,
-        run_pytest,
-        workspace_temporary_directory,
+        run_solution_suites,
     )
 else:
     from evaluation import (
         discover_tasks,
-        run_pytest,
-        workspace_temporary_directory,
+        run_solution_suites,
     )
 
 
@@ -118,7 +115,7 @@ def validate_metadata(
 
     difficulty = metadata.get("difficulty")
 
-    if difficulty not in VALID_DIFFICULTIES:
+    if not isinstance(difficulty, str) or difficulty not in VALID_DIFFICULTIES:
         errors.append(
             "difficulty must be easy, medium, or hard; "
             f"received {json.dumps(difficulty)}"
@@ -310,27 +307,9 @@ def _run_solution(
     task_path: Path,
     solution_path: Path,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    with workspace_temporary_directory(
-        Path.cwd(),
-        ".codeagentbench_validation_",
-    ) as temporary_directory:
-        temporary_task = temporary_directory / task_path.name
-        shutil.copytree(task_path, temporary_task)
-        shutil.copy2(
-            solution_path,
-            temporary_task / "starter.py",
-        )
-
-        public_result = run_pytest(
-            temporary_task / "test_public.py",
-            temporary_task,
-        )
-        hidden_result = run_pytest(
-            temporary_task / "test_hidden.py",
-            temporary_task,
-        )
-
-    return public_result, hidden_result
+    return run_solution_suites(
+        task_path, solution_path.read_bytes(), Path.cwd(),
+    )
 
 
 def _pytest_failure_summary(result: dict[str, Any]) -> str:
@@ -401,6 +380,8 @@ def validate_reference_solution(
         )
         return result
 
+    result["reference_public_test_count"] = reference_public["tests"]
+    result["reference_hidden_test_count"] = reference_hidden["tests"]
     result["reference_public_passed"] = reference_public["passed"]
     result["reference_hidden_passed"] = reference_hidden["passed"]
     result["starter_overall_passed"] = (
@@ -492,6 +473,13 @@ def validate_task(task_path: Path) -> dict[str, Any]:
     ):
         execution_result = validate_reference_solution(task_path)
         errors.extend(execution_result["errors"])
+        for suite, declared_count in (("public", public_count), ("hidden", hidden_count)):
+            executed = execution_result.get(f"reference_{suite}_test_count")
+            if executed is not None and executed != declared_count:
+                errors.append(
+                    f"reference {suite} suite executed {executed} tests, "
+                    f"but {declared_count} test functions were declared"
+                )
 
     warnings = validate_prompt_contract(task_path, metadata)
     task_id = (
@@ -511,6 +499,8 @@ def validate_task(task_path: Path) -> dict[str, Any]:
         "warnings": warnings,
         "public_test_count": public_count,
         "hidden_test_count": hidden_count,
+        "reference_public_test_count": execution_result.get("reference_public_test_count"),
+        "reference_hidden_test_count": execution_result.get("reference_hidden_test_count"),
         "reference_public_passed": execution_result[
             "reference_public_passed"
         ],

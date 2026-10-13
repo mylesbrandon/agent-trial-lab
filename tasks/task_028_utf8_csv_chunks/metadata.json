@@ -1,0 +1,24 @@
+{
+  "task_id": "task_028",
+  "name": "utf8_csv_chunks",
+  "task_type": "implementation",
+  "category": "data_parsing_robustness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "incremental_utf8",
+    "chunk_boundaries",
+    "multiline_csv"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 8,
+  "failure_modes_targeted": [
+    "decodes_chunks_independently"
+  ],
+  "contract_keywords": [
+    "single-pass",
+    "UTF-8",
+    "ValueError"
+  ],
+  "authorship": "AI-assisted task design, reference, and tests; independent human review pending"
+}

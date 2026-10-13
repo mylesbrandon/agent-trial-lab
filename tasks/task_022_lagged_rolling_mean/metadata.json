@@ -1,0 +1,28 @@
+{
+  "task_id": "task_022",
+  "name": "lagged_rolling_mean",
+  "task_type": "function_implementation",
+  "category": "time_series_correctness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "lagged_features",
+    "rolling_window",
+    "missing_observations",
+    "minimum_periods"
+  ],
+  "public_tests": 4,
+  "hidden_tests": 9,
+  "failure_modes_targeted": [
+    "current_row_lookahead",
+    "window_counts_valid_values",
+    "none_in_denominator",
+    "zeros_treated_as_missing"
+  ],
+  "contract_keywords": [
+    "excluding the current observation",
+    "window counts rows",
+    "min_periods",
+    "Zero"
+  ]
+}

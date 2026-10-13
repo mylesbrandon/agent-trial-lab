@@ -1,0 +1,28 @@
+{
+  "task_id": "task_019",
+  "name": "backward_asof",
+  "task_type": "function_implementation",
+  "category": "time_series_correctness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "asof_join",
+    "causality",
+    "duplicate_timestamps",
+    "staleness"
+  ],
+  "public_tests": 4,
+  "hidden_tests": 8,
+  "failure_modes_targeted": [
+    "exact_match_lookahead",
+    "future_nearest_neighbor",
+    "stale_observation",
+    "first_duplicate_selected"
+  ],
+  "contract_keywords": [
+    "nondecreasing",
+    "last eligible duplicate",
+    "staleness boundary",
+    "allow_exact=False"
+  ]
+}

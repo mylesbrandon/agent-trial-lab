@@ -1,0 +1,24 @@
+{
+  "task_id": "task_007",
+  "name": "linear_quantile",
+  "task_type": "bug_repair",
+  "category": "numerical_robustness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "interpolation",
+    "rank_convention",
+    "overflow_avoidance"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 9,
+  "failure_modes_targeted": [
+    "interpolation",
+    "rank_convention",
+    "overflow_avoidance"
+  ],
+  "contract_keywords": [
+    "ValueError",
+    "Do not mutate"
+  ]
+}

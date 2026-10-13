@@ -54,3 +54,22 @@ def test_identical_test_suites_are_error(make_valid_task):
         "test_public.py and test_hidden.py are identical"
         in result["errors"]
     )
+
+
+def test_uncollected_nested_test_is_not_counted_as_evidence(make_valid_task):
+    task_path = make_valid_task()
+    (task_path / "test_public.py").write_text(
+        "from starter import solve\n"
+        "def test_outer():\n"
+        "    assert solve(1) == 1\n"
+        "    def test_never_executed():\n"
+        "        assert False\n",
+        encoding="utf-8",
+    )
+    metadata_path = task_path / "metadata.json"
+    metadata = json.loads(metadata_path.read_text())
+    metadata["public_tests"] = 2
+    metadata_path.write_text(json.dumps(metadata))
+    result = validate_task(task_path)
+    assert not result["valid"]
+    assert any("executed 1 tests, but 2" in error for error in result["errors"])

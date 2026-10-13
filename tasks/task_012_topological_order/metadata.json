@@ -1,0 +1,28 @@
+{
+  "task_id": "task_012",
+  "name": "topological_order",
+  "title": "Lexicographic Topological Ordering",
+  "task_type": "bug_repair",
+  "category": "algorithmic_debugging",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "directed_acyclic_graphs",
+    "kahn_algorithm",
+    "priority_queues",
+    "cycle_detection"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 7,
+  "failure_modes_targeted": [
+    "fifo_tie_breaking",
+    "duplicate_indegree",
+    "disconnected_cycle",
+    "input_mutation"
+  ],
+  "contract_keywords": [
+    "Do not mutate",
+    "ValueError",
+    "duplicate"
+  ]
+}

@@ -52,7 +52,8 @@ def test_all_benchmark_task_prompts_can_be_built():
         for task_path in task_paths
     ]
 
-    assert len(prompts) == 4
+    assert task_paths
+    assert len(prompts) == len(task_paths)
     assert all("TASK SPECIFICATION" in prompt for prompt in prompts)
     assert all("STARTER CODE" in prompt for prompt in prompts)
     assert all("PUBLIC TESTS" in prompt for prompt in prompts)

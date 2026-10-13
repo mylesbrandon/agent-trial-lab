@@ -1,0 +1,28 @@
+{
+  "task_id": "task_023",
+  "name": "bounded_forward_fill",
+  "task_type": "function_implementation",
+  "category": "time_series_correctness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "forward_fill",
+    "observation_age",
+    "causal_imputation",
+    "missing_data"
+  ],
+  "public_tests": 4,
+  "hidden_tests": 8,
+  "failure_modes_targeted": [
+    "filled_row_refreshes_age",
+    "row_count_as_time",
+    "future_backfill",
+    "zero_treated_as_missing"
+  ],
+  "contract_keywords": [
+    "original observation",
+    "Filled rows do not refresh",
+    "inclusive",
+    "strictly increasing"
+  ]
+}

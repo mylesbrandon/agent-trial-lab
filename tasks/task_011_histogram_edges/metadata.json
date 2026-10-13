@@ -1,0 +1,24 @@
+{
+  "task_id": "task_011",
+  "name": "histogram_edges",
+  "task_type": "bug_repair",
+  "category": "numerical_robustness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "bin_boundary_semantics",
+    "nonuniform_bins",
+    "exact_float_comparison"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 8,
+  "failure_modes_targeted": [
+    "bin_boundary_semantics",
+    "nonuniform_bins",
+    "exact_float_comparison"
+  ],
+  "contract_keywords": [
+    "ValueError",
+    "Do not mutate"
+  ]
+}

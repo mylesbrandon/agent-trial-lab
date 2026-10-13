@@ -1,0 +1,28 @@
+{
+  "task_id": "task_016",
+  "name": "multigraph_bridges",
+  "title": "Bridge Edges in an Undirected Multigraph",
+  "task_type": "bug_repair",
+  "category": "algorithmic_debugging",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "undirected_multigraphs",
+    "bridges",
+    "low_link_values",
+    "edge_identity"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 8,
+  "failure_modes_targeted": [
+    "collapsed_parallel_edges",
+    "parent_vertex_instead_of_edge",
+    "missed_disconnected_component",
+    "self_loop_handling"
+  ],
+  "contract_keywords": [
+    "Do not mutate",
+    "ValueError",
+    "duplicate"
+  ]
+}

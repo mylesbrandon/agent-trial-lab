@@ -1,0 +1,2 @@
+# Keep the canonical corpus fingerprint stable across checkout platforms.
+tasks/** text eol=lf

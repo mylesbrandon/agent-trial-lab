@@ -1,6 +1,6 @@
 # One-Shot Candidate Generation
 
-CodeAgentBench-Lite separates candidate generation from candidate
+Agent Trial Lab separates candidate generation from candidate
 evaluation. Generation produces a reproducible record of what an agent
 saw and returned. Evaluation can then run the preserved candidate as
 many times as needed without calling the agent again.
@@ -57,10 +57,11 @@ results/
     `-- model_001/
         `-- one_shot/
             `-- task_001/
-                |-- request.md
-                |-- raw_response.txt
-                |-- extracted_solution.py
-                `-- generation.json
+                `-- <attempt_id>/
+                    |-- request.md
+                    |-- raw_response.txt
+                    |-- extracted_solution.py
+                    `-- generation.json
 ```
 
 The three result categories have distinct purposes:
@@ -74,9 +75,31 @@ preserves the adapter response even when parsing fails.
 `extracted_solution.py` is written only after successful parsing and
 matches the corresponding clean candidate.
 
-`generation.json` records the task, model, condition, adapter, artifact
-filenames, generation status, parse status, and any error. A failed
-parse remains a recorded generation but does not produce a candidate.
+Every generation creates a fresh UUID attempt directory. Existing
+attempts are never overwritten or deleted by the runner, including
+failed attempts. Files created by earlier versions directly under the
+task directory remain untouched.
+
+`generation.json` records the attempt ID, task, requested model and
+condition, adapter, adapter-reported model and condition when available,
+artifact filenames, generation status, parse status, and any error. It
+also records UTC start and completion timestamps, Python version and
+implementation, and platform details. Each saved prompt, raw response,
+and extracted candidate has a SHA-256 digest computed from its exact
+UTF-8 file bytes. These hashes support integrity checks; they do not
+prove the identity of the model or that the agent followed the protocol.
+A failed parse remains a recorded generation but does not produce a
+candidate. An adapter failure preserves the prompt and error, without
+inventing a response or a response hash.
+
+The clean `candidates/generated/<model>/<condition>/` directory remains
+a task-keyed solution set compatible with the evaluator. It is a mutable
+working copy: generating a task replaces that task's clean candidate,
+or removes it if generation or parsing fails. Other task candidates are
+unchanged. Keep attempt IDs with experimental results and copy preserved
+`extracted_solution.py` files into a separate task-keyed solution set
+when evaluating an earlier attempt. Do not select retries after seeing
+hidden-test outcomes and report them as a one-shot result.
 
 ## Response parsing
 

@@ -1,5 +1,9 @@
+import hashlib
 import json
+from datetime import datetime, timedelta
 from pathlib import Path
+
+import pytest
 
 from agents.base import AgentResponse, CodingAgent
 from agents.manual_agent import ManualAgent
@@ -19,6 +23,33 @@ class InvalidSyntaxAgent(CodingAgent):
             model="invalid-agent",
             condition="one_shot",
         )
+
+
+class FailingAgent(CodingAgent):
+    def generate(self, prompt: str) -> AgentResponse:
+        raise RuntimeError("Provider unavailable")
+
+
+def assert_generation_provenance(metadata, generation_directory):
+    started = datetime.fromisoformat(metadata["started_at_utc"])
+    completed = datetime.fromisoformat(metadata["completed_at_utc"])
+    assert started.utcoffset() == completed.utcoffset() == timedelta(0)
+    assert started <= completed
+    assert metadata["python_version"]
+    assert metadata["python_implementation"]
+    assert metadata["platform"]
+    for artifact in ("prompt", "raw_response", "candidate"):
+        file_key = f"{artifact}_file"
+        digest_key = f"{artifact}_sha256"
+        if file_key not in metadata:
+            assert digest_key not in metadata
+            continue
+        artifact_bytes = (
+            generation_directory / metadata[file_key]
+        ).read_bytes()
+        assert metadata[digest_key] == hashlib.sha256(
+            artifact_bytes
+        ).hexdigest()
 
 
 def test_manual_agent_collects_input_until_eof(
@@ -112,12 +143,8 @@ def test_mock_agent_generates_all_tasks(
         for result in generation_results
     ] == ["success"] * 4
 
-    for task_id in (
-        "task_001",
-        "task_002",
-        "task_003",
-        "task_004",
-    ):
+    for result in generation_results:
+        task_id = result["task_id"]
         expected_source = f"TASK_ID = {task_id!r}\n"
         generation_directory = (
             results_root
@@ -125,6 +152,7 @@ def test_mock_agent_generates_all_tasks(
             / "mock-agent"
             / "one_shot"
             / task_id
+            / result["attempt_id"]
         )
         candidate_path = (
             results_root
@@ -160,7 +188,9 @@ def test_mock_agent_generates_all_tasks(
                 generation_directory / "generation.json"
             ).read_text(encoding="utf-8")
         )
-        assert metadata == {
+        assert metadata == result
+        assert_generation_provenance(metadata, generation_directory)
+        expected_metadata = {
             "task_id": task_id,
             "model": "mock-agent",
             "condition": "one_shot",
@@ -170,7 +200,10 @@ def test_mock_agent_generates_all_tasks(
             "generation_status": "success",
             "raw_response_file": "raw_response.txt",
             "candidate_file": "extracted_solution.py",
+            "response_model": "mock-agent",
+            "response_condition": "one_shot",
         }
+        assert expected_metadata.items() <= metadata.items()
 
 
 def test_syntax_error_preserves_response_without_candidate(
@@ -208,6 +241,7 @@ def test_syntax_error_preserves_response_without_candidate(
         / "invalid-agent"
         / "one_shot"
         / "task_001"
+        / result["attempt_id"]
     )
     raw_response_path = (
         generation_directory / "raw_response.txt"
@@ -230,3 +264,137 @@ def test_syntax_error_preserves_response_without_candidate(
         )
     )
     assert recorded_metadata == result
+    assert_generation_provenance(result, generation_directory)
+
+
+def test_repeated_generation_preserves_prior_evidence(
+    make_valid_task,
+    workspace_tmp_path: Path,
+):
+    task_path = make_valid_task()
+    solution_directory = workspace_tmp_path / "mock_solutions"
+    solution_directory.mkdir()
+    solution_path = solution_directory / "task_001.py"
+    results_root = workspace_tmp_path / "results"
+    arguments = {
+        "agent": MockAgent(solution_directory),
+        "agent_adapter": "mock",
+        "task_path": task_path,
+        "model": "mock-agent",
+        "condition": "one_shot",
+        "results_root": results_root,
+    }
+    solution_path.write_text("value = 'first'\n", encoding="utf-8")
+    first = generate_candidate(**arguments)
+    task_generations = (
+        results_root / "generations" / "mock-agent" / "one_shot" / "task_001"
+    )
+    first_directory = task_generations / first["attempt_id"]
+    original_evidence = {
+        path.name: path.read_bytes() for path in first_directory.iterdir()
+    }
+
+    # Different prompt and response ensure hashes identify actual content.
+    (task_path / "prompt.md").write_text("A revised prompt.", encoding="utf-8")
+    solution_path.write_text("value = 'second'\n", encoding="utf-8")
+    second = generate_candidate(**arguments)
+
+    assert first["attempt_id"] != second["attempt_id"]
+    assert len(list(task_generations.iterdir())) == 2
+    assert {
+        path.name: path.read_bytes() for path in first_directory.iterdir()
+    } == original_evidence
+    for artifact in ("prompt", "raw_response", "candidate"):
+        assert first[f"{artifact}_sha256"] != second[f"{artifact}_sha256"]
+    assert_generation_provenance(second, task_generations / second["attempt_id"])
+    candidate_directory = (
+        results_root / "candidates" / "generated" / "mock-agent" / "one_shot"
+    )
+    assert [path.name for path in candidate_directory.iterdir()] == ["task_001.py"]
+    assert (candidate_directory / "task_001.py").read_bytes() == b"value = 'second'\n"
+
+
+@pytest.mark.parametrize("failing_agent", [InvalidSyntaxAgent(), FailingAgent()])
+def test_failed_retry_preserves_successful_attempt_and_clears_latest_candidate(
+    make_valid_task,
+    workspace_tmp_path: Path,
+    failing_agent,
+):
+    task_path = make_valid_task()
+    solution_directory = workspace_tmp_path / "mock_solutions"
+    solution_directory.mkdir()
+    (solution_directory / "task_001.py").write_text(
+        "value = 'café'\n", encoding="utf-8"
+    )
+    results_root = workspace_tmp_path / "results"
+    arguments = {
+        "agent_adapter": "mock",
+        "task_path": task_path,
+        "model": "mock-agent",
+        "condition": "one_shot",
+        "results_root": results_root,
+    }
+    first = generate_candidate(agent=MockAgent(solution_directory), **arguments)
+    task_generations = (
+        results_root / "generations" / "mock-agent" / "one_shot" / "task_001"
+    )
+    first_directory = task_generations / first["attempt_id"]
+    original_evidence = {
+        path.name: path.read_bytes() for path in first_directory.iterdir()
+    }
+
+    second = generate_candidate(agent=failing_agent, **arguments)
+    failed_directory = task_generations / second["attempt_id"]
+    assert first["attempt_id"] != second["attempt_id"]
+    assert second["generation_status"] != "success"
+    assert "candidate_sha256" not in second
+    assert not (failed_directory / "extracted_solution.py").exists()
+    assert not (
+        results_root / "candidates" / "generated" / "mock-agent"
+        / "one_shot" / "task_001.py"
+    ).exists()
+    assert {
+        path.name: path.read_bytes() for path in first_directory.iterdir()
+    } == original_evidence
+    assert_generation_provenance(first, first_directory)
+    assert_generation_provenance(second, failed_directory)
+    assert json.loads(
+        (failed_directory / "generation.json").read_text(encoding="utf-8")
+    ) == second
+    if isinstance(failing_agent, FailingAgent):
+        assert second["error"] == "Provider unavailable"
+        assert second["parse_status"] == "not_attempted"
+        assert not (failed_directory / "raw_response.txt").exists()
+
+
+def test_attempt_id_collision_does_not_overwrite_evidence(
+    make_valid_task,
+    workspace_tmp_path: Path,
+    monkeypatch,
+):
+    from uuid import UUID
+
+    monkeypatch.setattr(
+        "runner.generate_candidates.uuid4", lambda: UUID(int=1)
+    )
+    arguments = {
+        "agent": FailingAgent(),
+        "agent_adapter": "failing",
+        "task_path": make_valid_task(),
+        "model": "test-agent",
+        "condition": "one_shot",
+        "results_root": workspace_tmp_path / "results",
+    }
+    first = generate_candidate(**arguments)
+    generation_directory = (
+        arguments["results_root"] / "generations" / "test-agent"
+        / "one_shot" / "task_001" / first["attempt_id"]
+    )
+    original_evidence = {
+        path.name: path.read_bytes() for path in generation_directory.iterdir()
+    }
+    with pytest.raises(FileExistsError):
+        generate_candidate(**arguments)
+    assert {
+        path.name: path.read_bytes() for path in generation_directory.iterdir()
+    } == original_evidence

@@ -1,0 +1,24 @@
+{
+  "task_id": "task_030",
+  "name": "csv_exact_totals",
+  "task_type": "implementation",
+  "category": "data_parsing_robustness",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "exact_decimal_arithmetic",
+    "grouped_aggregation",
+    "missing_values"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 7,
+  "failure_modes_targeted": [
+    "binary_float_money_rounding"
+  ],
+  "contract_keywords": [
+    "exactly",
+    "FIRST appearance",
+    "ValueError"
+  ],
+  "authorship": "AI-assisted task design, reference, and tests; independent human review pending"
+}

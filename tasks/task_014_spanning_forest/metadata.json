@@ -1,0 +1,28 @@
+{
+  "task_id": "task_014",
+  "name": "spanning_forest",
+  "title": "Deterministic Minimum Spanning Forest",
+  "task_type": "bug_repair",
+  "category": "algorithmic_debugging",
+  "difficulty": "medium",
+  "language": "python",
+  "concepts": [
+    "undirected_graphs",
+    "kruskal_algorithm",
+    "disjoint_sets",
+    "deterministic_ties"
+  ],
+  "public_tests": 3,
+  "hidden_tests": 8,
+  "failure_modes_targeted": [
+    "maximum_instead_of_minimum",
+    "cycle_inclusion",
+    "parallel_edge_handling",
+    "disconnected_graphs"
+  ],
+  "contract_keywords": [
+    "Do not mutate",
+    "ValueError",
+    "duplicate"
+  ]
+}

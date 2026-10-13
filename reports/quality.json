@@ -1,0 +1,1022 @@
+{
+  "project": "Agent Trial Lab",
+  "generated_at_utc": "2026-10-13T04:35:11.375963+00:00",
+  "python": "3.14.6",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "pytest": "9.1.1",
+  "corpus_sha256": "867a01e71d7930dd7edb966d629e86bfcf7f9126458735835324114b4a03d4a5",
+  "quality_passed": true,
+  "thresholds": {
+    "minimum_tasks": 32,
+    "minimum_tests": 200
+  },
+  "task_count": 32,
+  "public_test_count": 109,
+  "hidden_test_count": 264,
+  "total_test_count": 373,
+  "categories": {
+    "algorithmic_debugging": {
+      "tasks": 8,
+      "public_tests": 26,
+      "hidden_tests": 63
+    },
+    "data_parsing_robustness": {
+      "tasks": 8,
+      "public_tests": 25,
+      "hidden_tests": 60
+    },
+    "numerical_robustness": {
+      "tasks": 8,
+      "public_tests": 24,
+      "hidden_tests": 72
+    },
+    "time_series_correctness": {
+      "tasks": 8,
+      "public_tests": 34,
+      "hidden_tests": 69
+    }
+  },
+  "reference_tasks_passed": 32,
+  "starter_tasks_rejected": 32,
+  "defect_fixture_count": 39,
+  "defect_fixtures_detected": 39,
+  "problems": [],
+  "validation": {
+    "benchmark_valid": true,
+    "task_count": 32,
+    "error_count": 0,
+    "warning_count": 0,
+    "global_errors": [],
+    "tasks": [
+      {
+        "task_id": "task_001",
+        "task_folder": "task_001_rolling_zscore",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_002",
+        "task_folder": "task_002_shortest_path",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 5,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 5,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_003",
+        "task_folder": "task_003_signal_alignment",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 6,
+        "hidden_test_count": 10,
+        "reference_public_test_count": 6,
+        "reference_hidden_test_count": 10,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_004",
+        "task_folder": "task_004_market_csv",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 4,
+        "hidden_test_count": 10,
+        "reference_public_test_count": 4,
+        "reference_hidden_test_count": 10,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_005",
+        "task_folder": "task_005_stable_softmax",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 10,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 10,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_006",
+        "task_folder": "task_006_weighted_mean",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 11,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 11,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_007",
+        "task_folder": "task_007_linear_quantile",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 9,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 9,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_008",
+        "task_folder": "task_008_minmax_scale",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 9,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 9,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_009",
+        "task_folder": "task_009_euclidean_norm",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_010",
+        "task_folder": "task_010_merge_moments",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 9,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 9,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_011",
+        "task_folder": "task_011_histogram_edges",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_012",
+        "task_folder": "task_012_topological_order",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 7,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 7,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_013",
+        "task_folder": "task_013_strong_components",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 7,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 7,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_014",
+        "task_folder": "task_014_spanning_forest",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_015",
+        "task_folder": "task_015_bipartite_coloring",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_016",
+        "task_folder": "task_016_multigraph_bridges",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_017",
+        "task_folder": "task_017_distance_layers",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_018",
+        "task_folder": "task_018_dag_finish_times",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 9,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 9,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_019",
+        "task_folder": "task_019_backward_asof",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 4,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 4,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_020",
+        "task_folder": "task_020_time_weighted_mean",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 4,
+        "hidden_test_count": 9,
+        "reference_public_test_count": 4,
+        "reference_hidden_test_count": 9,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_021",
+        "task_folder": "task_021_fixed_bin_ohlc",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 4,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 4,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_022",
+        "task_folder": "task_022_lagged_rolling_mean",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 4,
+        "hidden_test_count": 9,
+        "reference_public_test_count": 4,
+        "reference_hidden_test_count": 9,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_023",
+        "task_folder": "task_023_bounded_forward_fill",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 4,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 4,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_024",
+        "task_folder": "task_024_purged_time_split",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 4,
+        "hidden_test_count": 9,
+        "reference_public_test_count": 4,
+        "reference_hidden_test_count": 9,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_025",
+        "task_folder": "task_025_drawdown_durations",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 4,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 4,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_026",
+        "task_folder": "task_026_csv_schema",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 7,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 7,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_027",
+        "task_folder": "task_027_csv_deduplication",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 7,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 7,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_028",
+        "task_folder": "task_028_utf8_csv_chunks",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 8,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 8,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_029",
+        "task_folder": "task_029_csv_left_join",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 7,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 7,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_030",
+        "task_folder": "task_030_csv_exact_totals",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 7,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 7,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_031",
+        "task_folder": "task_031_csv_export",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 7,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 7,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      },
+      {
+        "task_id": "task_032",
+        "task_folder": "task_032_csv_pivot",
+        "valid": true,
+        "errors": [],
+        "warnings": [],
+        "public_test_count": 3,
+        "hidden_test_count": 7,
+        "reference_public_test_count": 3,
+        "reference_hidden_test_count": 7,
+        "reference_public_passed": true,
+        "reference_hidden_passed": true,
+        "starter_overall_passed": false
+      }
+    ]
+  },
+  "defect_fixtures": [
+    {
+      "task_id": "task_001",
+      "candidate": "results/baselines/task_001/full_history_solution.py",
+      "candidate_sha256": "b90ac42b66a1a51bfb0ec93717a22e87613bae0b9e60f121a4fa0da08c7ea53b",
+      "public_passed": false,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_negative_values",
+        "test_uses_rolling_window_not_full_history"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_001",
+      "candidate": "results/baselines/task_001/no_nan_handling.py",
+      "candidate_sha256": "53b72f84b59c7bbb56e36cf2eb3eaf9c283ce447e1e537cdfa45198c6ef3b09c",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_nan_ignored_in_window"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_001",
+      "candidate": "results/baselines/task_001/no_zero_variance_handling.py",
+      "candidate_sha256": "1748f9fda86f0acb66965930db98858f34a1f42d76ece04e7125b4d428ef01f6",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_constant_sequence_zero_variance"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_002",
+      "candidate": "results/baselines/task_002/no_relaxation_check.py",
+      "candidate_sha256": "78d93c03ea315b2debbb296cf0a9a8409605b633d96ecee1cc14a37ca37a6fae",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_unreachable_target",
+        "test_duplicate_edges_choose_cheapest",
+        "test_node_with_empty_adjacency_list",
+        "test_graph_is_directed"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_002",
+      "candidate": "results/baselines/task_002/unreachable_returns_none.py",
+      "candidate_sha256": "0dcf534310d727563b6816c3818ca6ced9b6bf6f52bfcbdd1b451df65098c37a",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_unreachable_target",
+        "test_node_with_empty_adjacency_list",
+        "test_graph_is_directed"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_003",
+      "candidate": "results/baselines/task_003/current_signal_lookahead.py",
+      "candidate_sha256": "4702a52edb8ed29842df2b1ac035bab9e968cfed8f7b011ee510af179df155f0",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_signal_after_price_jump_cannot_earn_jump_return",
+        "test_return_uses_previous_signal_when_signals_are_opposite",
+        "test_transaction_cost_is_charged_when_new_position_is_used",
+        "test_transaction_cost_scales_with_turnover",
+        "test_flat_prices_still_incur_position_change_costs"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_003",
+      "candidate": "results/baselines/task_003/flat_trade_cost.py",
+      "candidate_sha256": "821e1c9608c69203d2a26b8e179e81eec78a4f2de2fc3c6bfb071f31b92a08ef",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_transaction_cost_scales_with_turnover",
+        "test_flat_prices_still_incur_position_change_costs"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_003",
+      "candidate": "results/baselines/task_003/ignores_transaction_costs.py",
+      "candidate_sha256": "4fe7412044b93ae3d10f0c7ccd3e7c4d759efd09050255dbdef93f125d1d862a",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_transaction_cost_is_charged_when_new_position_is_used",
+        "test_transaction_cost_scales_with_turnover",
+        "test_flat_prices_still_incur_position_change_costs"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_004",
+      "candidate": "results/baselines/task_004/naive_split_solution.py",
+      "candidate_sha256": "3ec584b3696b9c834ab3dbd1ef0d2e8debfbb0a2b5a79f030ffadc0668865de7",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_quoted_comma_in_note"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_004",
+      "candidate": "results/baselines/task_004/no_missing_value_handling.py",
+      "candidate_sha256": "be4144614c3d7825a832c315d844c7a90d55b41348abcc0f61bb7d749d19f431",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_empty_price_becomes_none",
+        "test_empty_volume_becomes_none"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_004",
+      "candidate": "results/baselines/task_004/no_type_conversion.py",
+      "candidate_sha256": "6d8c9b0e72908267767372b4861330cb1d6d8cf4094ca351e56e1f01835da28d",
+      "public_passed": false,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_empty_price_becomes_none",
+        "test_empty_volume_becomes_none",
+        "test_whitespace_is_stripped_from_every_field",
+        "test_invalid_integer_volume_raises_value_error",
+        "test_multiple_records_are_normalized"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_005",
+      "candidate": "results/baselines/task_005/naive_solution.py",
+      "candidate_sha256": "1b901c396536a9bc4bbdbc157a1ee5c3b64eda2701e0210f9c0e253ce2c87b7c",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_large_positive_scores",
+        "test_large_negative_scores",
+        "test_positive_infinity_mass",
+        "test_all_negative_infinities",
+        "test_invalid_scores",
+        "test_shift_invariance_and_input_preservation",
+        "test_tuple_and_singleton",
+        "test_integer_outside_float_range",
+        "test_large_integer_differences_are_preserved"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_006",
+      "candidate": "results/baselines/task_006/naive_solution.py",
+      "candidate_sha256": "1965b095d885f6177ce80dbb9baa8f914136db648b65dd6733a02e63eba86740",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_large_weight_sum",
+        "test_large_products_and_cancellation",
+        "test_negative_or_all_zero_weights",
+        "test_empty_and_mismatched_lengths",
+        "test_invalid_values_even_with_zero_weight",
+        "test_invalid_weights",
+        "test_integer_outside_float_range"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_007",
+      "candidate": "results/baselines/task_007/naive_solution.py",
+      "candidate_sha256": "370e23369e5599cf143334285b7e813a9ba605c7fbab2cbf1ef9f0012885c643",
+      "public_passed": false,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_extreme_opposite_signs",
+        "test_extreme_same_signs",
+        "test_invalid_quantiles",
+        "test_invalid_values",
+        "test_empty_values",
+        "test_fractional_rank_and_preservation",
+        "test_integer_outside_float_range",
+        "test_large_integer_interpolation_keeps_small_result"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_008",
+      "candidate": "results/baselines/task_008/naive_solution.py",
+      "candidate_sha256": "200fc20016df4792a2622b777e3e4982ce53e5d7a0fe1c57b07fef3651670381",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_range_would_overflow",
+        "test_constant_and_singleton",
+        "test_empty_input",
+        "test_invalid_entries",
+        "test_integer_outside_float_range",
+        "test_adjacent_large_integer_values"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_009",
+      "candidate": "results/baselines/task_009/naive_solution.py",
+      "candidate_sha256": "2668c265f84464154c7aa7bc63f2586d14f32951aa3f6c17cf2e5f1d55bbb942",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_large_representable_norm",
+        "test_small_representable_norm",
+        "test_subnormal_singleton",
+        "test_invalid_numbers",
+        "test_invalid_types",
+        "test_integer_outside_float_range"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_010",
+      "candidate": "results/baselines/task_010/naive_solution.py",
+      "candidate_sha256": "fac2707fb38940a7b490a9a3f209b84c5aaba349a12bcee7e68cdd631608df6e",
+      "public_passed": false,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_empty_group_identity",
+        "test_large_offset_small_variance",
+        "test_associative_partition_example",
+        "test_invalid_counts",
+        "test_invalid_moments",
+        "test_malformed_summary",
+        "test_integer_outside_float_range",
+        "test_cancelling_integer_means_preserve_half_unit"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_011",
+      "candidate": "results/baselines/task_011/naive_solution.py",
+      "candidate_sha256": "132fd5733cd81b0630b6e5717c6bb061b369e30878fd43189fc9a96c2e978bc7",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_all_boundary_values",
+        "test_repeated_final_edge",
+        "test_nonuniform_negative_bins",
+        "test_invalid_edges",
+        "test_invalid_samples",
+        "test_tuple_and_input_preservation",
+        "test_integer_outside_float_range"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_012",
+      "candidate": "results/baselines/task_012/fifo_ready_queue.py",
+      "candidate_sha256": "4c649c457a00e67d20f960be00fd170033aec246fd929f8398f1747c4f0a64cb",
+      "public_passed": false,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_newly_ready_node_competes_with_existing_frontier"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_013",
+      "candidate": "results/baselines/task_013/use_forward_graph_in_second_pass.py",
+      "candidate_sha256": "4a72d22f946d09f70d6313ab80eb945a3dbf98f47252b2b8c29327cfb26afe22",
+      "public_passed": false,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_one_way_chain_is_not_one_component",
+        "test_cross_edges_between_interleaved_components",
+        "test_reachable_cycle_does_not_absorb_its_predecessor"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_014",
+      "candidate": "results/baselines/task_014/maximum_spanning_forest.py",
+      "candidate_sha256": "8a0cb27a885961ee197de76567bc702220d50d0ce45730bfa86ae3e7140a1aed",
+      "public_passed": false,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_negative_and_zero_weights",
+        "test_parallel_edges_and_self_loops",
+        "test_inputs_are_unchanged",
+        "test_supported_weight_boundaries"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_015",
+      "candidate": "results/baselines/task_015/treat_edges_as_directed.py",
+      "candidate_sha256": "c528352dde61512decf355da9abb86046391a9b9b96640a95925b0c3f628664e",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_reverse_only_edge_is_still_undirected",
+        "test_component_orientation_does_not_follow_insertion_order",
+        "test_inputs_are_unchanged"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_016",
+      "candidate": "results/baselines/task_016/collapse_parallel_edges.py",
+      "candidate_sha256": "0fd8bb5d1e41f08a88361fa254e24d23b4f8599d65464b3410b51f2933fe64bf",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_parallel_edges_are_not_bridges",
+        "test_parallel_pair_in_a_disconnected_component"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_017",
+      "candidate": "results/baselines/task_017/single_source_only.py",
+      "candidate_sha256": "076c7f100cf58f7d7379a76424cc33f35bf11972d155fad8b6a0ed5a761c4dab",
+      "public_passed": false,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_sources_stay_in_layer_zero_when_connected"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_018",
+      "candidate": "results/baselines/task_018/sum_predecessor_finish_times.py",
+      "candidate_sha256": "3d48b01c7c66ab4af0ff0299460c910c149f796f486a84ae1ddf0e7e233d97da",
+      "public_passed": false,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_inputs_are_unchanged_and_predecessors_use_maximum"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_019",
+      "candidate": "results/baselines/task_019/ignores_strict_boundary.py",
+      "candidate_sha256": "b0f02fd0bedcb534d8e20fa67b62c315cff304f492c6792fc5d41be60d547ebb",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_strict_alignment_excludes_all_exact_duplicates",
+        "test_zero_age_and_strict_selection"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_020",
+      "candidate": "results/baselines/task_020/full_window_denominator.py",
+      "candidate_sha256": "6891197bf3134d5bbbed0193d57709e598e70d85c554a0d14368b912a418e3fc",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_partial_coverage_uses_only_known_duration",
+        "test_query_order_negative_times_and_repetition",
+        "test_inputs_are_unchanged_and_tuple_sequences_work"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_021",
+      "candidate": "results/baselines/task_021/truncates_negative_bins.py",
+      "candidate_sha256": "f68a11885fee3d19610c323977f877c994d4bd846611bd6dd239e9e3480777e5",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_negative_offsets_use_floor_division"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_022",
+      "candidate": "results/baselines/task_022/current_row_lookahead.py",
+      "candidate_sha256": "db4d3a99349d34147171bb8e98045ececd4d3188ce713610b63034103d743021",
+      "public_passed": false,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_current_spike_cannot_affect_current_feature",
+        "test_missing_rows_still_consume_window_positions",
+        "test_min_periods_counts_nonmissing_values_only",
+        "test_zero_values_are_observations",
+        "test_window_longer_than_series_uses_available_history",
+        "test_tuple_input_and_no_mutation",
+        "test_supported_magnitude_bound_is_inclusive"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_023",
+      "candidate": "results/baselines/task_023/refreshes_age_on_fill.py",
+      "candidate_sha256": "3301bee3d80442897966a9dd5e8865b058c76e501b12460f28501616f778d576",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_filled_rows_do_not_refresh_source_age",
+        "test_negative_timestamps_have_inclusive_age_boundary"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_024",
+      "candidate": "results/baselines/task_024/ignores_label_overlap.py",
+      "candidate_sha256": "f6de73f66b4d654910d165ee984f74d99f4d104008764e1701029892aa54ba7f",
+      "public_passed": false,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_pretest_start_with_overlapping_label_is_purged",
+        "test_no_selected_test_samples_still_apply_protection",
+        "test_invalid_interval_container"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_025",
+      "candidate": "results/baselines/task_025/requires_strict_new_high.py",
+      "candidate_sha256": "a965a85d5b08aef2c18a1954235d82708e935890e56d9ca9cef9078cb0558cdc",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_equal_high_recovers_and_resets_clock",
+        "test_peak_plateau_uses_most_recent_peak_timestamp",
+        "test_new_global_peak_replaces_previous_reference"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_026",
+      "candidate": "results/baselines/task_026/duplicate_header_overwrite.py",
+      "candidate_sha256": "fd48752e3592ee5ab5141b5db1f0a1ee45452e8f0fdb6b8c730df07dee5a55cb",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_duplicate_header_after_normalization"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_027",
+      "candidate": "results/baselines/task_027/last_occurrence_reorders_groups.py",
+      "candidate_sha256": "e6a5896289a6f05813b21af64bd48273cbba6f837438d6adfa906d7cd410e9b9",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_last_replacement_keeps_first_group_order",
+        "test_composite_keys_do_not_collide",
+        "test_quoted_values_and_blank_records"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_028",
+      "candidate": "results/baselines/task_028/decodes_chunks_independently.py",
+      "candidate_sha256": "e591d793c3f2b78e8c16026bedd403467989d7ce28cd18ec6e565aa77014de16",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_every_byte_boundary_in_unicode_and_bom",
+        "test_interior_bom_is_preserved_as_data"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_029",
+      "candidate": "results/baselines/task_029/silently_overwrites_duplicate_right_ids.py",
+      "candidate_sha256": "0f02b98cd0a65b9804acd084f7731b7b9e359ee4aa864f332b14699fd2cb13e0",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_duplicate_right_ids_rejected_after_stripping",
+        "test_right_validated_when_left_empty_or_key_unmatched"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_030",
+      "candidate": "results/baselines/task_030/binary_float_money_rounding.py",
+      "candidate_sha256": "64338d37fdca712fc124ae1efc3945668cb8fb66e2c54dc2af5e8d2fda960aa9",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_exact_large_cancellation_and_cents"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_031",
+      "candidate": "results/baselines/task_031/omits_formula_string_escaping.py",
+      "candidate_sha256": "98b1f39f694d446dc80f84d7bcc0be6350128565caa3432b9f79b19b55eda089",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_formula_strings_after_whitespace_are_prefixed",
+        "test_negative_numbers_are_distinct_from_numeric_strings",
+        "test_headers_are_literal_and_inputs_unchanged"
+      ],
+      "detected": true
+    },
+    {
+      "task_id": "task_032",
+      "candidate": "results/baselines/task_032/duplicate_pivot_cell_overwrite.py",
+      "candidate_sha256": "f6521a08cb6a6f85510b3334e4e598a824c0c813f8e8fb0c559fd24a6dc88241",
+      "public_passed": true,
+      "hidden_status": "failed",
+      "hidden_failed_tests": [
+        "test_duplicate_cell_rejected_even_equal_after_stripping"
+      ],
+      "detected": true
+    }
+  ]
+}

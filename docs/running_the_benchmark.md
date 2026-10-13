@@ -1,4 +1,4 @@
-# Running CodeAgentBench-Lite
+# Running Agent Trial Lab
 
 ## Candidate solution sets
 
@@ -92,3 +92,46 @@ runner records the task as `missing_candidate`.
 
 Missing candidates count as unsolved in aggregate pass rates, but they
 remain distinct from attempted candidates that failed.
+
+## Deadlines and execution evidence
+
+Both evaluation commands accept `--timeout-seconds` (default 10 seconds per
+suite). It must be finite and positive. The validator uses the same default.
+Timeouts produce a failed result with `public_execution.status` or
+`hidden_execution.status` equal to `timeout`, then evaluation continues.
+
+A zero process exit alone is insufficient: a passing suite needs a nonempty
+JUnit report with no failures, errors, or skipped tests. Collection errors and
+missing reports are marked `error`. An ordinary assertion failure is `failed`.
+JUnit failure names and separate failure/error/skip counts are saved in each
+result. Empty or skipped suites never count as passing.
+
+Each run also stores:
+
+* `task_snapshot/` with the executed tests, prompt, starter, and metadata;
+* `public_test_results.xml` and `hidden_test_results.xml` when reports exist;
+* the candidate and task SHA-256 hashes;
+* Python, pytest, and platform versions, suite timings, and deadline settings.
+
+Snapshots are captured before candidate execution. Public and hidden suites run
+in separate directories without a reference solution. Ambient pytest options
+and third-party plugins are disabled. These controls do not sandbox hostile
+code; see the [execution boundary](methodology.md#execution-boundary).
+
+Summary paths are convenience files and are replaced for a repeated
+model/condition. The individual run directories retain detailed evidence. Use a
+new `--results-root` per frozen experiment and preserve its configuration and
+summary alongside the runs.
+
+## Verify the published corpus
+
+```bash
+python runner/check_quality.py --report-path work/quality.json
+```
+
+This validates the tasks, confirms the reference candidate set, counts executed
+reference tests, and evaluates every deliberately flawed baseline. The default
+gates require at least 32 tasks and 200 tests. Failing hidden assertions count
+as defect detection; collection errors and timeouts do not. The command returns
+a nonzero exit status if any gate fails. Its report includes exact baseline
+failure names and a deterministic corpus fingerprint.

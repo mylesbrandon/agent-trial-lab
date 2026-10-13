@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import platform
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Sequence
+from uuid import uuid4
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -113,11 +117,18 @@ def _write_generation_metadata(
     generation_directory: Path,
     metadata: dict[str, str],
 ) -> None:
+    metadata["completed_at_utc"] = datetime.now(timezone.utc).isoformat()
     metadata_path = generation_directory / "generation.json"
-    metadata_path.write_text(
-        json.dumps(metadata, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    with metadata_path.open("x", encoding="utf-8") as output:
+        output.write(json.dumps(metadata, indent=2) + "\n")
+
+
+def _write_evidence(path: Path, content: str) -> str:
+    """Write exact UTF-8 bytes once and return their SHA-256 digest."""
+    data = content.encode("utf-8")
+    with path.open("xb") as output:
+        output.write(data)
+    return hashlib.sha256(data).hexdigest()
 
 
 def generate_candidate(
@@ -129,16 +140,19 @@ def generate_candidate(
     condition: str,
     results_root: Path,
 ) -> dict[str, str]:
-    """Generate and preserve artifacts for one benchmark task."""
+    """Preserve a new attempt and refresh the task's clean candidate."""
     task_id = load_metadata(task_path)["task_id"]
     model_directory = slugify(model)
     condition_directory = slugify(condition)
+    attempt_id = uuid4().hex
+    started_at_utc = datetime.now(timezone.utc).isoformat()
     generation_directory = (
         results_root
         / "generations"
         / model_directory
         / condition_directory
         / task_id
+        / attempt_id
     )
     candidate_directory = (
         results_root
@@ -147,7 +161,8 @@ def generate_candidate(
         / model_directory
         / condition_directory
     )
-    generation_directory.mkdir(parents=True, exist_ok=True)
+    # A collision must fail rather than risk altering an existing attempt.
+    generation_directory.mkdir(parents=True, exist_ok=False)
     candidate_directory.mkdir(parents=True, exist_ok=True)
 
     request_path = generation_directory / "request.md"
@@ -156,22 +171,24 @@ def generate_candidate(
     candidate_path = candidate_directory / f"{task_id}.py"
 
     prompt = build_one_shot_prompt(task_path)
-    request_path.write_bytes(prompt.encode("utf-8"))
+    prompt_sha256 = _write_evidence(request_path, prompt)
 
-    for stale_path in (
-        raw_response_path,
-        extracted_path,
-        candidate_path,
-    ):
-        if stale_path.exists():
-            stale_path.unlink()
+    # The clean solution set represents the current attempt. A failed retry
+    # must not silently evaluate an older candidate; its evidence stays intact.
+    candidate_path.unlink(missing_ok=True)
 
     generation_metadata = {
+        "attempt_id": attempt_id,
+        "started_at_utc": started_at_utc,
         "task_id": task_id,
         "model": model,
         "condition": condition,
         "agent_adapter": agent_adapter,
         "prompt_file": request_path.name,
+        "prompt_sha256": prompt_sha256,
+        "python_version": platform.python_version(),
+        "python_implementation": platform.python_implementation(),
+        "platform": platform.platform(),
         "parse_status": "not_attempted",
         "generation_status": "failed",
     }
@@ -186,8 +203,12 @@ def generate_candidate(
         )
         return generation_metadata
 
-    raw_response_path.write_bytes(response.text.encode("utf-8"))
+    generation_metadata["raw_response_sha256"] = _write_evidence(
+        raw_response_path, response.text
+    )
     generation_metadata["raw_response_file"] = raw_response_path.name
+    generation_metadata["response_model"] = response.model
+    generation_metadata["response_condition"] = response.condition
     generation_metadata["generation_status"] = "completed"
 
     try:
@@ -201,8 +222,10 @@ def generate_candidate(
         )
         return generation_metadata
 
-    extracted_path.write_text(source, encoding="utf-8")
-    candidate_path.write_text(source, encoding="utf-8")
+    generation_metadata["candidate_sha256"] = _write_evidence(
+        extracted_path, source
+    )
+    candidate_path.write_bytes(source.encode("utf-8"))
     generation_metadata.update(
         {
             "candidate_file": extracted_path.name,
@@ -278,7 +301,7 @@ def main() -> None:
         results_root=args.results_root,
     )
 
-    print("CodeAgentBench-Lite Candidate Generation")
+    print("Agent Trial Lab Candidate Generation")
     print(f"Model: {args.model}")
     print(f"Condition: {args.condition}")
     print()
@@ -290,6 +313,7 @@ def main() -> None:
             else "FAILED"
         )
         print(f"{result['task_id']}: {status}")
+        print(f"  Attempt: {result['attempt_id']}")
 
         if "error" in result:
             print(f"  {result['error']}")
